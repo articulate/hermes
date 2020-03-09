@@ -1,0 +1,27 @@
+{
+  "name": "messages",
+  "version": "0.0.0",
+  "description": "Event-sourced autonomous service toolkit for node.js",
+  "main": "src/index.js",
+  "repository": "git@github.com:articulate/messages.git",
+  "author": "articulate",
+  "license": "MIT",
+  "scripts": {
+    "docs": "docsify serve -p 4000 ./docs",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@articulate/funky": "^1.9.1",
+    "debug": "^4.1.1",
+    "highland": "^2.13.5",
+    "mnemonist": "^0.32.0",
+    "pg": "^7.18.2",
+    "pg-query-stream": "^3.0.3",
+    "ramda": "^0.27.0",
+    "tinyfunk": "^1.7.2",
+    "uuid": "^7.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  }
+}
