@@ -1,4 +1,4 @@
-* [Intro](/)
+* [Getting Started](/)
 * [Event Sourcing](event-sourcing.md)
 * [API](api.md)
 * [Extras](extras.md)

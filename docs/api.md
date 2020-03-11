@@ -136,7 +136,7 @@ Initializes an entity store with an object of options, and returns a interface w
 
 ?> **An entity is not the same as a "model" or a "SQL table" in a CRUD system.**  It is instead a reduction of the events in a single stream using a particular projection.  If you have a background in functional programming, you may be familiar with the concept of a reducer: a projection is just a reducer.  Multiple entities may be created from the same events in a stream using different projections, but often you only need one per component.
 
-The events in the message store are the source of truth in an event-sourced system.  [Components]() (built with [consumers]()) often query the current state of the message store by projecting entities.  [Aggregators]() usually don't need to work with entities.
+The events in the message store are the source of truth in an event-sourced system.  [Components]() (built with [consumers](/api?id=consumer)) often query the current state of the message store by projecting entities.  [Aggregators]() usually don't need to work with entities.
 
 ### Options / Example
 
@@ -223,7 +223,7 @@ Writes a message to a named stream in the message store in an append-only manner
 | `type` | `String` | `'Activated'` | The type of the message, see [naming guidelines](/best-practices?id=naming-things) |
 | `data` | `Any` | `{ userId }` | JSON-serializable main data |
 | `metadata` | `Any` | `{ traceId, userId }` | JSON-serializable metadata |
-| `expectedVersion` | `Number` | `0` | Expected version of the stream when written, used for [optimistic concurrency protection]() |
+| `expectedVersion` | `Number` | `0` | Expected version of the stream when written, used for [optimistic concurrency protection](/api?id=optimistic-concurrency) |
 
 ```js
 const { writeMessage } = require('../lib/hermes')
