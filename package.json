@@ -1,9 +1,9 @@
 {
-  "name": "messages",
+  "name": "@articulate/hermes",
   "version": "0.0.0",
-  "description": "Event-sourced autonomous service toolkit for node.js",
+  "description": "Event-sourced autonomous service toolkit for Node.js",
   "main": "src/index.js",
-  "repository": "git@github.com:articulate/messages.git",
+  "repository": "git@github.com:articulate/hermes.git",
   "author": "articulate",
   "license": "MIT",
   "scripts": {

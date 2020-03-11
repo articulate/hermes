@@ -6,10 +6,10 @@ const extras = {
   VersionConflictError: require('./lib/VersionConflictError')
 }
 
-// messages :: Object -> Object
-const messages = opts => {
+// hermes :: Object -> Object
+const hermes = opts => {
   const db = require('./db')(opts)
   return Object.assign({}, mapObj(thrush(db), api), db, extras)
 }
 
-module.exports = messages
+module.exports = hermes

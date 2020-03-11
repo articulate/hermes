@@ -27,7 +27,7 @@ Consumers can either act either as [components](), which process messages and wr
 | `tickInterval` | `Number` | `100` | Milliseconds to wait after latest batch before polling for new messages |
 
 ```js
-const { Consumer } = require('../lib/messages')
+const { Consumer } = require('../lib/hermes')
 const UserActivation = require('./entities/UserActivation')
 
 const Activate = async message => {
@@ -116,7 +116,7 @@ Some cases merit retrying in the event of an error, such as those caused by fail
 const { backoff } = require('@articulate/funky')
 const { is } = require('tinyfunk')
 
-const { VersionConflictError } = require('../lib/messages')
+const { VersionConflictError } = require('../lib/hermes')
 
 const handler = message => {
   // writes an event with an expectedVersion that conflicts
@@ -153,7 +153,7 @@ The events in the message store are the source of truth in an event-sourced syst
 ```js
 const { merge } = require('tinyfunk')
 
-const { Entity } = require('../lib/messages')
+const { Entity } = require('../lib/hermes')
 
 const init = {
   activated: false,
@@ -221,12 +221,12 @@ Writes a message to a named stream in the message store in an append-only manner
 | - | - | - | - |
 | `streamName` | `String` | `'userActivation-${userId}'` | Name of stream to which the message is written, see [naming guidelines](/best-practices?id=naming-things) |
 | `type` | `String` | `'Activated'` | The type of the message, see [naming guidelines](/best-practices?id=naming-things) |
-| `data` | `Any` | `{ activatedAt, userId }` | JSON-serializable main data |
+| `data` | `Any` | `{ userId }` | JSON-serializable main data |
 | `metadata` | `Any` | `{ traceId, userId }` | JSON-serializable metadata |
 | `expectedVersion` | `Number` | `0` | Expected version of the stream when written, used for [optimistic concurrency protection]() |
 
 ```js
-const { writeMessage } = require('../lib/messages')
+const { writeMessage } = require('../lib/hermes')
 
 const writeActivated = ({ traceId, userId }) =>
   writeMessage({
