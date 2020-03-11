@@ -1,0 +1,8 @@
+*.log
+.DS_Store
+.env
+.next
+.nyc_output
+docker-compose.override.yml
+node_modules
+nodejs
