@@ -3,6 +3,7 @@ const { merge } = require('tinyfunk')
 const { once } = require('ramda')
 const { tapP } = require('@articulate/funky')
 
+// Consumer :: Object -> { start, stop }
 const Consumer = db => opts => {
   const {
     batchSize = 1000,
@@ -59,6 +60,11 @@ const Consumer = db => opts => {
   }
 
   const start = async () => {
+    if (up) {
+      debug('already started')
+      return
+    }
+
     debug('starting on category: %o', category)
     debug('handling types: %o', Object.keys(handlers))
 
@@ -75,9 +81,14 @@ const Consumer = db => opts => {
   }
 
   const stop = err => {
-    if (err) console.error(err)
-    debug(`stopping${err ? ' on error' : ''}`)
-    up = false
+    if (up) {
+      debug(`stopping${err ? ' on error' : ''}`)
+      up = false
+    } else {
+      debug('already stopped')
+    }
+
+    if (err) throw err
   }
 
   const tick = () => {
@@ -108,7 +119,7 @@ const Consumer = db => opts => {
   process.once('SIGINT', cleanup)
   process.once('SIGTERM', cleanup)
 
-  return { handlers, start, stop }
+  return { start, stop }
 }
 
 module.exports = Consumer

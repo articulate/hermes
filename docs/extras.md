@@ -5,3 +5,5 @@
 ## getLastStreamMessage
 
 ## getStreamMessages
+
+## VersionConflictError

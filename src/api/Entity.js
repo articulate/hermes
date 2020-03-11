@@ -39,7 +39,7 @@ const copySnapshotVersion =
 const parseSnapshot =
   when(Boolean, compose(copySnapshotVersion, prop('data')))
 
-// Entity :: Object -> String -> Promise [ a, Number ]
+// Entity :: Object -> { fetch: String -> Promise [ a, Number ] }
 const Entity = db => opts => {
   const {
     cache,
