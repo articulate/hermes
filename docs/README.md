@@ -31,7 +31,8 @@ See the full documentation here: https://articulate.github.io/hermes/
 You can also host the docs locally by cloning the repo and running:
 
 ```
-yarn && yarn docs
+npm i docsify-cli -g
+yarn docs
 ```
 
 Local docs will then be available at: http://localhost:4000
