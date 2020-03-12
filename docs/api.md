@@ -14,17 +14,17 @@ Consumers can either act either as [components](), which process messages and wr
 
 ### Options / Example
 
-| Option | Type | Default | Description |
-| - | - | - | - |
-| `batchSize` | `Number` | `1000` | Number of messages to retrieve per batch
-| `category` | `String` | | Name of the category to read |
-| `handlers` | `Object` | `{}` | Map of message types to async handler functions |
-| `groupMember` | `Number` | | Optional group identifier to enable concurrency |
-| `groupSize` | `Number` | | Optional group total to enable concurrency |
-| `init` | `Function` | | Optional read model initializer |
-| `name` | `String` | | Unique name used to store the consumer's position |
-| `positionUpdateInterval` | `Number` | `100` | Minimum number of messages processed before the current position is recorded |
-| `tickInterval` | `Number` | `100` | Milliseconds to wait after latest batch before polling for new messages |
+| Option                   | Type       | Default | Description                                                                  |
+|:-------------------------|:-----------|:--------|:-----------------------------------------------------------------------------|
+| `batchSize`              | `Number`   | `1000`  | Number of messages to retrieve per batch                                     |
+| `category`               | `String`   |         | Name of the category to read                                                 |
+| `handlers`               | `Object`   | `{}`    | Map of message types to async handler functions                              |
+| `groupMember`            | `Number`   |         | Optional group identifier to enable concurrency                              |
+| `groupSize`              | `Number`   |         | Optional group total to enable concurrency                                   |
+| `init`                   | `Function` |         | Optional read model initializer                                              |
+| `name`                   | `String`   |         | Unique name used to store the consumer's position                            |
+| `positionUpdateInterval` | `Number`   | `100`   | Minimum number of messages processed before the current position is recorded |
+| `tickInterval`           | `Number`   | `100`   | Milliseconds to wait after latest batch before polling for new messages      |
 
 ```js
 const { Consumer } = require('../lib/hermes')
@@ -140,15 +140,15 @@ The events in the message store are the source of truth in an event-sourced syst
 
 ### Options / Example
 
-| Option | Type | Default | Description |
-| - | - | - | - |
-| `cache.enabled` | `Boolean` | `true` | Flag to enable im-memory LRU-cache |
-| `cache.limit` | `Number` | `1000` | Max size of in-memory LRU-cache |
-| `handlers` | `Object` | `{}` | Map of event types to reducers |
-| `init` | `Any` | | Initial projection state |
-| `name` | `String` | | Unique name used to store entity snapshots |
-| `snapshot.enabled` | `Boolean` | `true` | Flag to enable snapshotting |
-| `snapshot.interval` | `Number` | `100` | Minimum number of messages since last snapshot before recording another |
+| Option              | Type      | Default | Description                                                             |
+|:--------------------|:----------|:--------|:------------------------------------------------------------------------|
+| `cache.enabled`     | `Boolean` | `true`  | Flag to enable im-memory LRU-cache                                      |
+| `cache.limit`       | `Number`  | `1000`  | Max size of in-memory LRU-cache                                         |
+| `handlers`          | `Object`  | `{}`    | Map of event types to reducers                                          |
+| `init`              | `Any`     |         | Initial projection state                                                |
+| `name`              | `String`  |         | Unique name used to store entity snapshots                              |
+| `snapshot.enabled`  | `Boolean` | `true`  | Flag to enable snapshotting                                             |
+| `snapshot.interval` | `Number`  | `100`   | Minimum number of messages since last snapshot before recording another |
 
 ```js
 const { merge } = require('tinyfunk')
@@ -217,13 +217,13 @@ Writes a message to a named stream in the message store in an append-only manner
 
 ### Attributes / Example
 
-| Attribute | Type | Example | Description |
-| - | - | - | - |
-| `streamName` | `String` | `'userActivation-${userId}'` | Name of stream to which the message is written, see [naming guidelines](/best-practices?id=naming-things) |
-| `type` | `String` | `'Activated'` | The type of the message, see [naming guidelines](/best-practices?id=naming-things) |
-| `data` | `Any` | `{ userId }` | JSON-serializable main data |
-| `metadata` | `Any` | `{ traceId, userId }` | JSON-serializable metadata |
-| `expectedVersion` | `Number` | `0` | Expected version of the stream when written, used for [optimistic concurrency protection](/api?id=optimistic-concurrency) |
+| Attribute         | Type     | Example                      | Description                                                                                                               |
+|:------------------|:---------|:-----------------------------|:--------------------------------------------------------------------------------------------------------------------------|
+| `streamName`      | `String` | `'userActivation-${userId}'` | Name of stream to which the message is written, see [naming guidelines](/best-practices?id=naming-things)                 |
+| `type`            | `String` | `'Activated'`                | The type of the message, see [naming guidelines](/best-practices?id=naming-things)                                        |
+| `data`            | `Any`    | `{ userId }`                 | JSON-serializable main data                                                                                               |
+| `metadata`        | `Any`    | `{ traceId, userId }`        | JSON-serializable metadata                                                                                                |
+| `expectedVersion` | `Number` | `0`                          | Expected version of the stream when written, used for [optimistic concurrency protection](/api?id=optimistic-concurrency) |
 
 ```js
 const { writeMessage } = require('../lib/hermes')
