@@ -251,7 +251,7 @@ Component message handlers frequently need to query the state of an event stream
 const [ entity, version ] = await UserActivation.fetch(userId)
 ```
 
-If you another consumer instance has written to the same stream before you act on this projected state, then your state is stale, and you'll need to retry.  To do this, be sure to specify the `expectedVersion` of the stream on your message:
+If another consumer instance has written to the same stream before you act on this projected state, then your state is stale, and you'll need to retry.  To do this, be sure to specify the `expectedVersion` of the stream on your message:
 
 ```js
 writeMessage({

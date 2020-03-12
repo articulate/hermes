@@ -43,9 +43,9 @@ const dbFactory = opts => {
     _((async () => {
       const client = await pool.connect()
       await setPath(client)
-      const stream = client.query(new QueryStream(sql, vals))
-      stream.on('end', () => client.release())
-      return _(stream)
+      const stream = _(client.query(new QueryStream(sql, vals)))
+      stream.observe().done(() => client.release())
+      return stream
     })()).flatten()
 
   process.once('SIGHUP', cleanup)
