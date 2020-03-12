@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 
 const debug = require('../lib/debug').extend('db')
 const handleVersionConflict = require('../lib/handleVersionConflict')
