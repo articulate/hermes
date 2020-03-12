@@ -14,17 +14,18 @@ Consumers can either act either as [components](), which process messages and wr
 
 ### Options / Example
 
-| Option                   | Type       | Default | Description                                                                  |
-|:-------------------------|:-----------|:--------|:-----------------------------------------------------------------------------|
-| `batchSize`              | `Number`   | `1000`  | Number of messages to retrieve per batch                                     |
-| `category`               | `String`   |         | Name of the category to read                                                 |
-| `handlers`               | `Object`   | `{}`    | Map of message types to async handler functions                              |
-| `groupMember`            | `Number`   |         | Optional group identifier to enable concurrency                              |
-| `groupSize`              | `Number`   |         | Optional group total to enable concurrency                                   |
-| `init`                   | `Function` |         | Optional read model initializer                                              |
-| `name`                   | `String`   |         | Unique name used to store the consumer's position                            |
-| `positionUpdateInterval` | `Number`   | `100`   | Minimum number of messages processed before the current position is recorded |
-| `tickInterval`           | `Number`   | `100`   | Milliseconds to wait after latest batch before polling for new messages      |
+| Option                   | Type       | Default  | Description                                                                  |
+|:-------------------------|:-----------|:---------|:-----------------------------------------------------------------------------|
+| `batchSize`              | `Number`   | `1000`   | Number of messages to retrieve per batch                                     |
+| `category`               | `String`   |          | Name of the category to read                                                 |
+| `handlers`               | `Object`   | `{}`     | Map of message types to async handler functions                              |
+| `groupMember`            | `Number`   |          | Optional group identifier to enable concurrency                              |
+| `groupSize`              | `Number`   |          | Optional group total to enable concurrency                                   |
+| `init`                   | `Function` |          | Optional read model initializer                                              |
+| `name`                   | `String`   |          | Unique name used to store the consumer's position                            |
+| `onError`                | `Function` | (throws) | Optional custom error handler, see [details here]()                          |
+| `positionUpdateInterval` | `Number`   | `100`    | Minimum number of messages processed before the current position is recorded |
+| `tickInterval`           | `Number`   | `100`    | Milliseconds to wait after latest batch before polling for new messages      |
 
 ```js
 const { Consumer } = require('../lib/hermes')
@@ -108,9 +109,11 @@ We may include an implementation of this script in a future release, but until t
 
 ### Error Handling
 
-In most cases, errors that occur during the processing of a message by a handler should not be caught, since an error represents a fatal, unrecoverable condition.  Consequently, in the event of an error, a consumer will stop processing messages, and will then re-throw the error.  This will likely kill the process, and if you have [sufficient error aggregation](https://github.com/bugsnag/bugsnag-js) in place, it will notify you automatically.
+In most cases, errors that occur during the processing of a message by a handler should not be caught, since an error represents a fatal, unrecoverable condition.  We can't skip the message, because then all future state in the message store and any read models would be invalid.  Consequently, in the event of an error, a consumer will stop processing messages.
 
-Some cases merit retrying in the event of an error, such as those caused by failed `http` requests or a [`VersionConflictError`](/extras?id=versionconflicterror).  In that case, retrying should happen at the handler level, but should limit the number of tries to prevent hanging the consumer indefinitely.  Here's a brief example:
+After stopping, by default, the error will be thrown, which will likely kill the process.  If throwing and killing aren't really your jam, you may supply a custom `onError` function to handle the error instead.
+
+Some errors actually merit retrying, such as those caused by failed `http` requests or a [`VersionConflictError`](/extras?id=versionconflicterror).  Retrying should happen at the handler level, but should limit the number of tries to prevent hanging the consumer indefinitely.  Here's a brief example:
 
 ```js
 const { backoff } = require('@articulate/funky')

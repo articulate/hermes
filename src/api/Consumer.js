@@ -3,6 +3,10 @@ const { merge } = require('tinyfunk')
 const { once } = require('ramda')
 const { tapP } = require('@articulate/funky')
 
+const throws = err => {
+  throw err
+}
+
 // Consumer :: Object -> { start, stop }
 const Consumer = db => opts => {
   const {
@@ -13,6 +17,7 @@ const Consumer = db => opts => {
     groupSize,
     init,
     name,
+    onError = throws,
     positionUpdateInterval = 100,
     tickInterval = 100
   } = opts
@@ -88,7 +93,7 @@ const Consumer = db => opts => {
       debug('already stopped')
     }
 
-    if (err) throw err
+    if (err) onError(err)
   }
 
   const tick = () => {
