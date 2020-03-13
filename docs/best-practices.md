@@ -1,6 +1,6 @@
 # Best Practices
 
-## Naming things
+## Naming Things
 
 | Thing     | Example(s)                 | Guidelines                                           |
 |:----------|:---------------------------|:-----------------------------------------------------|
@@ -10,4 +10,4 @@
 | Command   | `Activate`, `Deactivate`   | Imperative verb, no object                           |
 | Event     | `Activated`, `Deactivated` | Past-tense verb, no object                           |
 
-## Idempotence patterns
+## Idempotence Patterns

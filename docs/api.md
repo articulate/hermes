@@ -1,5 +1,13 @@
 # API
 
+Pretty much every event-sourced system built with `hermes` will need to:
+
+- Write messages to the message store, with [`writeMessage`](/api?id=writemessage).
+- Consume messages and handle them with a [`Consumer`](/api?id=consumer).
+- Project events into current state with an [`Entity`](/api?id=entity).
+
+There are [some extras](/extras) that help in various situations, but these three are your daily drivers.
+
 ## Consumer
 
 ```haskell
@@ -8,9 +16,9 @@ Consumer :: Object -> { start, stop }
 
 Initializes a consumer with an object of options, returning an interface with `start` and `stop` functions.  A consumer processes ordered messages from a single [category](), keeping track of its position to resume processing after restarts.  Once finished reading a category, it continues to poll for new messages.
 
-?> Consumers put the "autonomy" in event-sourced autonomous services, because they operate as independent actors.  If one goes down, the rest can presumably stay up and running (unless you [host them together](/api?id=starting-stopping)).
+?> Consumers put the "autonomy" in event-sourced autonomous services, because they operate as independent actors.  If one goes down, the rest will presumably stay up and running (unless you [host them together](/api?id=starting-stopping)).
 
-Consumers can either act either as [components](), which process messages and write new events, or [aggregators](), which process events to update [read models]().  From an implementation standpoint, the main difference that is aggregators will often use an `init` function to initialize the read model, while components will not.
+Consumers can act either as [components](), which process messages and write new events, or [aggregators](), which process events to update [read models]().  From an implementation standpoint, the main difference that is aggregators will often use an `init` function to initialize the read model, while components will not.
 
 ### Options / Example
 
@@ -23,7 +31,7 @@ Consumers can either act either as [components](), which process messages and wr
 | `groupSize`              | `Number`   |          | Optional group total to enable concurrency                                   |
 | `init`                   | `Function` |          | Optional read model initializer                                              |
 | `name`                   | `String`   |          | Unique name used to store the consumer's position                            |
-| `onError`                | `Function` | (throws) | Optional custom error handler, see [details here]()                          |
+| `onError`                | `Function` | (throws) | Optional custom error handler, see [details here](/api?id=error-handling)                          |
 | `positionUpdateInterval` | `Number`   | `100`    | Minimum number of messages processed before the current position is recorded |
 | `tickInterval`           | `Number`   | `100`    | Milliseconds to wait after latest batch before polling for new messages      |
 
