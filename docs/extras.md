@@ -6,4 +6,6 @@
 
 ## getStreamMessages
 
+## streamVersion
+
 ## VersionConflictError

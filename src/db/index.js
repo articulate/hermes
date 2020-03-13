@@ -10,6 +10,7 @@ const db = {
   getCategoryMessages: require('./getCategoryMessages'),
   getLastStreamMessage: require('./getLastStreamMessage'),
   getStreamMessages: require('./getStreamMessages'),
+  streamVersion: require('./streamVersion'),
   writeMessage: require('./writeMessage')
 }
 
