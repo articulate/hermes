@@ -27,11 +27,11 @@ Consumers can act either as [components](), which process messages and write new
 | `batchSize`              | `Number`   | `1000`   | Number of messages to retrieve per batch                                     |
 | `category`               | `String`   |          | Name of the category to read                                                 |
 | `handlers`               | `Object`   | `{}`     | Map of message types to async handler functions                              |
-| `groupMember`            | `Number`   |          | Optional group identifier to enable concurrency                              |
+| `groupMember`            | `Number`   |          | Optional zero-based group member number to enable concurrency                |
 | `groupSize`              | `Number`   |          | Optional group total to enable concurrency                                   |
 | `init`                   | `Function` |          | Optional read model initializer                                              |
 | `name`                   | `String`   |          | Unique name used to store the consumer's position                            |
-| `onError`                | `Function` | (throws) | Optional custom error handler, see [details here](/api?id=error-handling)                          |
+| `onError`                | `Function` | (throws) | Optional custom error handler, see [details here](/api?id=error-handling)    |
 | `positionUpdateInterval` | `Number`   | `100`    | Minimum number of messages processed before the current position is recorded |
 | `tickInterval`           | `Number`   | `100`    | Milliseconds to wait after latest batch before polling for new messages      |
 
@@ -119,9 +119,9 @@ We may include an implementation of this script in a future release, but until t
 
 In most cases, errors that occur during the processing of a message by a handler should not be caught, since an error represents a fatal, unrecoverable condition.  We can't skip the message, because then all future state in the message store and any read models would be invalid.  Consequently, in the event of an error, a consumer will stop processing messages.
 
-After stopping, by default, the error will be thrown, which will likely kill the process.  If throwing and killing aren't really your jam, you may supply a custom `onError` function to handle the error instead.
+After stopping, by default, the error will be thrown, which will likely kill the process.  If you would like to override the default behavior (perhaps to integrate an error reporting tool), you may supply a custom `onError` function to handle the error instead.  However, since the consumer has already stopped, it is recommended that you still kill the process afterward to let the process manager handle the problem appropriately.
 
-Some errors actually merit retrying, such as those caused by failed `http` requests or a [`VersionConflictError`](/extras?id=versionconflicterror).  Retrying should happen at the handler level, but should limit the number of tries to prevent hanging the consumer indefinitely.  Here's a brief example:
+Some errors actually merit retrying, such as those caused by failed network requests or a [`VersionConflictError`](/extras?id=versionconflicterror).  Retrying should happen at the handler level, but should limit the number of tries to prevent hanging the consumer indefinitely.  Here's a brief example:
 
 ```js
 const { backoff } = require('@articulate/funky')
@@ -214,7 +214,7 @@ Entities are also periodically persistent to a durable cache in a process called
 `${name}:snapshot-${id}`
 ```
 
-If caching is disabled or an entity is not found in the cache, a snapshot will be loaded before projecting over newer events.
+If caching is disabled or an entity is not found in the cache, a snapshot will be loaded before projecting over newer events.  Snapshots are enabled by default with an interval of 100 messages, but can be disabled or configured as desired.
 
 ## writeMessage
 
