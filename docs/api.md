@@ -2,7 +2,7 @@
 
 Pretty much every event-sourced system built with `hermes` will need to:
 
-- Write messages to the message store, with [`writeMessage`](/api?id=writemessage).
+- Write messages to the message store with [`writeMessage`](/api?id=writemessage).
 - Consume messages and handle them with a [`Consumer`](/api?id=consumer).
 - Project events into current state with an [`Entity`](/api?id=entity).
 
@@ -74,11 +74,11 @@ module.exports =
   })
 ```
 
-?> **Notice the idempotence check in the handler.**  We only want to act on a message if we haven't previously acted on it.  Messages in a stream are processed in order, but consumers restart all the time (whether by chaos or actual deploys), so messages are frequently reprocessed.  Therefore, your message handlers **must be idempotent.**
+?> **Notice the idempotence check in the handler.**  We only want to act on a message if we haven't previously acted on it.  Messages in a stream are processed in order, but consumers restart all the time (whether by chaos or actual deploys), so messages are frequently reprocessed.  Therefore, your message handlers **must be idempotent.**  A collection of common idempotence patterns is included in [Best Practices](/best-practices?id=idempotence-patterns).
 
 ### Starting / Stopping
 
-A consumer is constructed in a dormant state, and will not begin processing messages until you call its `start()` function.  If desired, multiple consumers can be run together on a single host.  Starting them together is simple:
+A consumer is constructed in a dormant state, and will not begin processing messages until you call its `start()` function.  If desired, multiple related consumers that together form one [component]() can be run together on a single host.  Starting them together is simple:
 
 ```js
 const components = [
@@ -89,7 +89,7 @@ const components = [
 components.forEach(comp => comp.start())
 ```
 
-!> **When one of its handlers rejects with an error, a consumer will automatically stop processing messages and then re-throw the error, which will likely kill the process.**  (See [Error Handling](/api?id=error-handling) for details.)  So if you've grouped multiple components onto a single host like this, a failure in one will stop the rest.  You'll want to balance the cost of isolated hosting with the risk of these types of failures.
+!> **When one of its handlers rejects with an error, a consumer will automatically stop processing messages and then re-throw the error, which will likely kill the process.**  (See [Error Handling](/api?id=error-handling) for details.)  So if you've grouped multiple consumers onto a single host like this, a failure in one will stop the rest.  You'll want to balance the cost of isolated hosting with the risk of these types of failures.  However, if the consumers are related and together form one [component](), it may be completely appropriate to stop them all.
 
 If you need to stop manually for any other reason, simple call its `stop()` function.
 

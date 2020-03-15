@@ -73,7 +73,11 @@ getStreamMessages({ streamName: `userActivation-${userId}` })
 streamVersion :: String -> Promise Number
 ```
 
-Accept a `streamName`, and resolves with the high position number in the stream.  [Stream positions](/event-sourcing?id=stream) start at `0`, so the version of an empty stream will be `-1`.
+Accepts a `streamName`, and resolves with the highest position number in the stream.
+
+?> [Stream positions](/event-sourcing?id=stream) start at `0`, so the version of an empty stream is `-1`.
+
+Only use `streamVersion` if you need just the version and nothing else.  If you instead use an [entity store](/api?id=entity) to project over a stream and calculate current state, then the resolved `[ entity, version ]` pair will have aleady provided the version you need.
 
 ```js
 const { streamVersion } = require('../lib/hermes')
