@@ -16,7 +16,7 @@ Consumer :: Object -> { start, stop }
 
 Initializes a consumer with an object of options, returning an interface with `start` and `stop` functions.  A consumer processes ordered messages from a single [category](), keeping track of its position to resume processing after restarts.  Once finished reading a category, it continues to poll for new messages.
 
-?> Consumers put the "autonomy" in event-sourced autonomous services, because they operate as independent actors.  If one goes down, the rest will presumably stay up and running (unless you [host them together](/api?id=starting-stopping)).
+?> **Consumers put the "autonomy" in event-sourced autonomous services,** because they operate as independent actors.  If one goes down, the rest will presumably stay up and running (unless you [host them together](/api?id=starting-stopping)).
 
 Consumers can act either as [components](), which process messages and write new events, or [aggregators](), which process events to update [read models]().  From an implementation standpoint, the main difference that is aggregators will often use an `init` function to initialize the read model, while components will not.
 
@@ -119,7 +119,7 @@ We may include an implementation of this script in a future release, but until t
 
 In most cases, errors that occur during the processing of a message by a handler should not be caught, since an error represents a fatal, unrecoverable condition.  We can't skip the message, because then all future state in the message store and any read models would be invalid.  Consequently, in the event of an error, a consumer will stop processing messages.
 
-After stopping, by default, the error will be thrown, which will likely kill the process.  If you would like to override the default behavior (perhaps to integrate an error reporting tool), you may supply a custom `onError` function to handle the error instead.  However, since the consumer has already stopped, it is recommended that you still kill the process afterward to let the process manager handle the problem appropriately.
+?> **After stopping, by default, the error will be thrown, which will likely kill the process.**  If you would like to override the default behavior (perhaps to integrate an error reporting tool), you may supply a custom `onError` function to handle the error instead.  However, since the consumer has already stopped, it is recommended that you **still kill the process** afterward to let the process manager handle the problem appropriately.
 
 Some errors actually merit retrying, such as those caused by failed network requests or a [`VersionConflictError`](/extras?id=versionconflicterror).  Retrying should happen at the handler level, but should limit the number of tries to prevent hanging the consumer indefinitely.  Here's a brief example:
 
@@ -145,7 +145,7 @@ Entity :: Object -> { fetch: String -> Promise [ a, Number ] }
 
 Initializes an entity store with an object of options, and returns a interface with a `fetch` function.  Calling `fetch(id)` on an entity store is the primary means of querying for state in the message store.  The `fetch` function resolves with an `[ entity, version ]` pair, which are the projected entity and the current version of the stream.
 
-?> **An entity is not the same as a "model" or a "SQL table" in a CRUD system.**  It is instead a reduction of the events in a single stream using a particular projection.  If you have a background in functional programming, you may be familiar with the concept of a reducer: a projection is just a reducer.  Multiple entities may be created from the same events in a stream using different projections, but often you only need one per component.
+?> **An entity is not the same as a "model" or a "SQL table" in a CRUD system.**  It is instead a reduction of the events in a single stream using a particular projection.  If you have a background in functional programming, you may be familiar with the concept of a reducer: a projection is just a reducer.  Multiple entities may be created from the same events in a stream using different projections, but often you will only need one per component.
 
 The events in the message store are the source of truth in an event-sourced system.  [Components]() (built with [consumers](/api?id=consumer)) often query the current state of the message store by projecting entities.  [Aggregators]() usually don't need to work with entities.
 
