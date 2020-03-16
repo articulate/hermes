@@ -30,6 +30,8 @@ getCategoryMessages({
   .done(() => console.log('done'))
 ```
 
+?> If you'd rather work with a [Node Readable stream](https://devdocs.io/node/stream#stream_readable_streams) instead, then call `.toNodeStream({ objectMode: true })` on the result.  See the [Highland docs](http://highlandjs.org/#toNodeStream) for details.
+
 ## getLastStreamMessage
 
 ```haskell
@@ -66,6 +68,8 @@ getStreamMessages({ streamName: `userActivation-${userId}` })
   .flatMap(handleMessage)
   .done(() => console.log('done'))
 ```
+
+?> If you'd rather work with a [Node Readable stream](https://devdocs.io/node/stream#stream_readable_streams) instead, then call `.toNodeStream({ objectMode: true })` on the result.  See the [Highland docs](http://highlandjs.org/#toNodeStream) for details.
 
 ## streamVersion
 
