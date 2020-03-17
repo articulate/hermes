@@ -91,7 +91,7 @@ components.forEach(comp => comp.start())
 
 !> **When one of its handlers rejects with an error, a consumer will automatically stop processing messages and then re-throw the error, which will likely kill the process.**  (See [Error Handling](/api?id=error-handling) for details.)  So if you've grouped multiple consumers onto a single host like this, a failure in one will stop the rest.  You'll want to balance the cost of isolated hosting with the risk of these types of failures.  However, if the consumers are related and together form one [component](), it may be completely appropriate to stop them all.
 
-If you need to stop manually for any other reason, simple call its `stop()` function.
+If you need to stop manually for any other reason, simply call its `stop()` function.
 
 ### Consumer Groups
 
