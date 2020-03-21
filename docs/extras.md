@@ -1,6 +1,6 @@
 # Extras
 
-Aside from the [three main API functions](/api), `hermes` also exports these extras.  Some are used internally and exposed just-in-case, while others you my find useful all the time.  It's up to you.
+Aside from the [three main API functions](/api), Hermes also exports these extras.  Some are used internally and exposed just-in-case, while others you my find useful all the time.  It's up to you.
 
 ## getCategoryMessages
 

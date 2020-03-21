@@ -1,4 +1,14 @@
-# @articulate/hermes
+<style>
+  @font-face {
+    font-family: GentiumPlus-I;
+    src: url("/GentiumPlus-I.woff") format("woff");
+  }
+</style>
+
+<h1 style="font-family: GentiumPlus-I; line-height: 1.2;" align="center">
+  <img src="/logo.svg" height="120px" /><br/>
+  Hermes - Ἑρμῆς
+</h1>
 
 > Event-sourced autonomous service toolkit for [Node.js](https://nodejs.org/)
 
@@ -10,7 +20,7 @@ yarn add @articulate/hermes
 
 ## Setup
 
-Follow the [setup instructions](https://github.com/message-db/message-db) for `message-db` to initialize the message store, or use [this Docker image](https://hub.docker.com/r/ethangarofolo/message-db) for local dev.  Then provide connection options as below:
+Follow the [setup instructions](https://github.com/message-db/message-db) for Message DB to initialize the message store, or use [this Docker image](https://hub.docker.com/r/ethangarofolo/message-db) for local dev.  Then provide connection options as below:
 
 ```js
 // server/lib/hermes.js
