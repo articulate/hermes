@@ -1,6 +1,6 @@
-# @articulate/hermes
+# Hermes
 
-> Event-sourced autonomous service toolkit for [Node.js](https://nodejs.org/)
+Event-sourced autonomous service toolkit for Node.js
 
 ## Install
 

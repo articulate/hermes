@@ -12,7 +12,7 @@ If you try to search for a good definition of "event sourcing", you'll likely re
   <iframe width="560" height="315" src="https://www.youtube.com/embed/qgKlu5gFsJM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
 
-In addition, the Postgres event store [Message DB](https://github.com/message-db/message-db) which backs Hermes was extracted from [Eventide](https://eventide-project.org/).  The structure and terminology of Hermes were also heavily influenced by the feature-set and implementation of Eventide.  Consequently, the [Eventide documentation contains a great storehouse of knowledge](http://docs.eventide-project.org/) offering greater insight into the underlying mechanics of Hermes.  I recommend that you peruse them as well.
+In addition, the Postgres event store [Message DB](https://github.com/message-db/message-db) which backs Hermes was extracted from [Eventide](https://eventide-project.org/).  The structure and terminology of Hermes were also heavily influenced by the feature-set and implementation of Eventide.  Consequently, the [Eventide documentation](http://docs.eventide-project.org/) contains a great storehouse of knowledge offering greater insight into the underlying mechanics of Hermes.  I recommend that you peruse them as well.
 
 Assuming you've been fully indoctrinated by the materials above, the remainder of this document will serve to explain event-sourcing as modeled in Message DB and Hermes.
 

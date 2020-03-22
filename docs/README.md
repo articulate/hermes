@@ -1,16 +1,17 @@
 <style>
   @font-face {
     font-family: GentiumPlus-I;
-    src: url("/GentiumPlus-I.woff") format("woff");
+    src: url("/fonts/GentiumPlus-I.woff") format("woff");
   }
 </style>
 
-<h1 style="font-family: GentiumPlus-I; line-height: 1.2;" align="center">
-  <img src="/logo.svg" height="120px" /><br/>
-  Hermes - Ἑρμῆς
+<h1 style="align-items: center; color: var(--theme-color); display: flex; font-family: GentiumPlus-I; font-size: 68px; justify-content: center; line-height: 1;">
+  <img src="/logo.svg" height="100px" alt="Hermes" style="margin-right: -11px"/>Ἑρμῆς
 </h1>
 
-> Event-sourced autonomous service toolkit for [Node.js](https://nodejs.org/)
+<p align="center">
+  Event-sourced autonomous service toolkit for Node.js
+</p>
 
 ## Install
 

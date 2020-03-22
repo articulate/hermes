@@ -6,15 +6,35 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Event-sourced autonomous service toolkit for Node.js">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <!-- Theme: Simple -->
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hermes/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/hermes/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/hermes/icons/favicon-16x16.png">
+  <link rel="manifest" href="/hermes/icons/site.webmanifest">
+  <link rel="mask-icon" href="/hermes/icons/safari-pinned-tab.svg" color="#0b87da">
+  <link rel="shortcut icon" href="/hermes/icons/favicon.ico">
+  <meta name="apple-mobile-web-app-title" content="Hermes">
+  <meta name="application-name" content="Hermes">
+  <meta name="msapplication-TileColor" content="#2d89ef">
+  <meta name="msapplication-config" content="/hermes/icons/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+
+  <style>
+    .app-name img {
+      height: 60px;
+    }
+  </style>
 </head>
 <body>
   <div id="app"></div>
   <script>
     window.$docsify = {
       auto2top: true,
+      basePath: '/hermes/',
       loadSidebar: true,
+      logo: 'logo.svg',
       name: 'Hermes',
       repo: 'https://github.com/articulate/hermes',
       search: {
