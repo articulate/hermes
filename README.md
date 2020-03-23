@@ -1,6 +1,12 @@
-# Hermes
+<p align="center">
+  <a href="#">
+    <img height="103px" src="https://user-images.githubusercontent.com/888052/77281533-a7da7a80-6c9d-11ea-874c-66475fa89d53.png"/>
+  </a>
+</p>
 
-Event-sourced autonomous service toolkit for Node.js
+<p align="center">
+  Event-sourced autonomous service toolkit for Node.js
+</p>
 
 ## Install
 

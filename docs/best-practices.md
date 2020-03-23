@@ -76,5 +76,3 @@ Records a snapshot of an entity to avoid repeatedly projecting over a large stre
   "metadata": null
 }
 ```
-
-## Idempotence Patterns

@@ -6,7 +6,7 @@
 </style>
 
 <h1 style="align-items: center; color: var(--theme-color); display: flex; font-family: GentiumPlus-I; font-size: 68px; justify-content: center; line-height: 1;">
-  <img src="/logo.svg" height="100px" alt="Hermes" style="margin-right: -11px"/>Ἑρμῆς
+  <img src="/images/icon.svg" height="100px" alt="Hermes" style="margin-right: -11px"/>Ἑρμῆς
 </h1>
 
 <p align="center">
