@@ -1,5 +1,5 @@
 const _ = require('highland')
-const { mapObj, thrush, when } = require('tinyfunk')
+const { mapObj, merge, pipe, thrush } = require('tinyfunk')
 const { once } = require('ramda')
 const { Pool } = require('pg')
 const QueryStream = require('pg-query-stream')
@@ -14,9 +14,6 @@ const db = {
   writeMessage: require('./writeMessage')
 }
 
-const setPath = client =>
-  client.query('SET search_path = message_store, public')
-
 // See the following for available options:
 // - https://node-postgres.com/api/client
 // - https://node-postgres.com/api/pool
@@ -26,16 +23,20 @@ const dbFactory = opts => {
   pool.on('error', console.error)
 
   const cleanup = once(signal => {
-    debug(`received ${signal}, draining pool`)
-    pool.end(when(Boolean, console.error))
+    debug((signal ? `received ${signal}, ` : '') + 'draining pool')
+    return pool.end().catch(console.error)
   })
 
   // query :: (String, [a]) -> Promise b
   const query = async (sql, vals=[]) => {
     const client = await pool.connect()
-    await setPath(client)
-    const res = await client.query(sql, vals)
-    client.release()
+
+    try {
+      var res = await client.query(sql, vals)
+    } finally {
+      client.release()
+    }
+
     return res.rows
   }
 
@@ -43,7 +44,6 @@ const dbFactory = opts => {
   const queryS = (sql, vals=[]) =>
     _((async () => {
       const client = await pool.connect()
-      await setPath(client)
       const stream = _(client.query(new QueryStream(sql, vals)))
       stream.observe().done(() => client.release())
       return stream
@@ -53,7 +53,10 @@ const dbFactory = opts => {
   process.once('SIGINT', cleanup)
   process.once('SIGTERM', cleanup)
 
-  return mapObj(thrush({ query, queryS }), db)
+  return pipe(
+    mapObj(thrush({ query, queryS })),
+    merge({ cleanup })
+  )(db)
 }
 
 module.exports = dbFactory

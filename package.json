@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "docs": "docsify serve -p 4000 ./docs",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "mocha --reporter=dot"
   },
   "dependencies": {
     "@articulate/funky": "^1.9.1",
@@ -22,6 +23,10 @@
     "uuid": "^7.0.2"
   },
   "devDependencies": {
-    "eslint": "^6.8.0"
+    "chai": "^4.2.0",
+    "chai-uuid": "^1.0.6",
+    "eslint": "^6.8.0",
+    "mocha": "^7.1.1",
+    "prop-factory": "^1.0.0"
   }
 }

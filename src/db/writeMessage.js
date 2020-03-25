@@ -1,4 +1,4 @@
-const { v4: uuid } = require('uuid')
+const uuid = require('uuid')
 
 const debug = require('../lib/debug').extend('db')
 const handleVersionConflict = require('../lib/handleVersionConflict')
@@ -11,7 +11,7 @@ const writeMessage = ({ query }) => async message => {
     return Promise.reject(new Error('Messages must have a type'))
 
   const { data, expectedVersion, metadata, streamName, type } = message
-  const id = uuid()
+  const id = uuid.v4()
   const result = { id, ...message }
   debug('writing message: %o', result)
 

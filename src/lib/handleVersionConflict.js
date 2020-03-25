@@ -1,4 +1,4 @@
-const versionConflictRegex = /^Wrong.*Stream Version: (\d+)\)/
+const versionConflictRegex = /^Wrong.*Stream Version: (-?\d+)\)/
 
 const VersionConflictError = require('./VersionConflictError')
 
