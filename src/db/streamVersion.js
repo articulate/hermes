@@ -2,7 +2,7 @@ const { compose, defaultTo, path } = require('tinyfunk')
 
 const debug = require('../lib/debug').extend('db')
 
-const sql = `SELECT * FROM message_store.stream_version($1)`
+const sql = 'SELECT * FROM message_store.stream_version($1)'
 
 const parseVersion =
   compose(Number, defaultTo('-1'), path([0, 'stream_version']))

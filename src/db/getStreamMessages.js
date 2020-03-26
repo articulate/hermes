@@ -1,7 +1,7 @@
 const debug = require('../lib/debug').extend('db')
 const parseMessage = require('../lib/parseMessage')
 
-const sql = `SELECT * FROM message_store.get_stream_messages($1, $2, $3, $4)`
+const sql = 'SELECT * FROM message_store.get_stream_messages($1, $2, $3, $4)'
 
 // getStreamMessages :: Object -> Stream Message
 const getStreamMessages = ({ queryS }) => opts => {
