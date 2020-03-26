@@ -1,7 +1,8 @@
 const _ = require('highland')
-const { merge } = require('tinyfunk')
-const { once } = require('ramda')
-const { tapP } = require('@articulate/funky')
+const { mapObj, merge } = require('tinyfunk')
+
+const once = require('../lib/once')
+const tapP = require('../lib/tapP')
 
 const throws = err => {
   throw err
@@ -12,7 +13,6 @@ const Consumer = db => opts => {
   const {
     batchSize = 1000,
     category,
-    handlers = {},
     groupMember,
     groupSize,
     init,
@@ -22,13 +22,14 @@ const Consumer = db => opts => {
     tickInterval = 100
   } = opts
 
-  let count = 0
-  let position = 0
+  const handlers = mapObj(tapP, opts.handlers || {})
+  const pollOpts = { batchSize, category, groupMember, groupSize }
   const suffix = groupMember ? `-${groupMember}:${groupSize}` : ''
   const streamName = `${category}+position-${name}${suffix}`
-  let up = false
 
-  const pollOpts = { batchSize, category, groupMember, groupSize }
+  let count = 0
+  let position = 0
+  let up = false
 
   const debug =
     require('../lib/debug').extend(`consumer-${name}${suffix}`)
@@ -44,7 +45,7 @@ const Consumer = db => opts => {
 
   const handleMessage = msg =>
     typeof handlers[msg.type] === 'function'
-      ? _(tapP(handlers[msg.type])(msg))
+      ? _(handlers[msg.type](msg))
       : _.of(msg)
 
   const loadPosition = () =>

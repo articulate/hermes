@@ -151,15 +151,15 @@ The events in the message store are the source of truth in an event-sourced syst
 
 ### Options / Example
 
-| Option              | Type      | Default | Description                                                             |
-|:--------------------|:----------|:--------|:------------------------------------------------------------------------|
-| `cache.enabled`     | `Boolean` | `true`  | Flag to enable im-memory LRU-cache                                      |
-| `cache.limit`       | `Number`  | `1000`  | Max size of in-memory LRU-cache                                         |
-| `handlers`          | `Object`  | `{}`    | Map of event types to reducers                                          |
-| `init`              | `Any`     |         | Initial projection state                                                |
-| `name`              | `String`  |         | Unique name used to store entity snapshots                              |
-| `snapshot.enabled`  | `Boolean` | `true`  | Flag to enable snapshotting                                             |
-| `snapshot.interval` | `Number`  | `100`   | Minimum number of messages since last snapshot before recording another |
+| Option             | Type      | Default | Description                                                             |
+|:-------------------|:----------|:--------|:------------------------------------------------------------------------|
+| `cacheEnabled`     | `Boolean` | `true`  | Flag to enable im-memory LRU-cache                                      |
+| `cacheLimit`       | `Number`  | `1000`  | Max size of in-memory LRU-cache                                         |
+| `handlers`         | `Object`  | `{}`    | Map of event types to reducers                                          |
+| `init`             | `Any`     |         | Initial projection state                                                |
+| `name`             | `String`  |         | Unique name used to store entity snapshots                              |
+| `snapshotEnabled`  | `Boolean` | `true`  | Flag to enable snapshotting                                             |
+| `snapshotInterval` | `Number`  | `100`   | Minimum number of messages since last snapshot before recording another |
 
 ```js
 const { merge } = require('tinyfunk')

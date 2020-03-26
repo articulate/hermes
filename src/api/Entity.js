@@ -1,8 +1,5 @@
-const { copyProp } = require('@articulate/funky')
-const { mergeDeepRight } = require('ramda')
-
 const {
-  compose, dissoc, identity, merge, prop, when
+  assoc, compose, dissoc, identity, merge, prop, when
 } = require('tinyfunk')
 
 // See https://github.com/dominictarr/bench-lru for benchmark comparison
@@ -19,22 +16,18 @@ const emptyRecord = {
 }
 
 const applyDefaults =
-  mergeDeepRight({
-    cache: {
-      enabled: true,
-      limit: 1000
-    },
-    snapshot: {
-      enabled: true,
-      interval: 100
-    }
+  merge({
+    cacheEnabled: true,
+    cacheLimit: 1000,
+    snapshotEnabled: true,
+    snapshotInterval: 100
   })
 
 const cleanSnapshot =
   dissoc('snapshotVersion')
 
-const copySnapshotVersion =
-  copyProp('version', 'snapshotVersion')
+const copySnapshotVersion = record =>
+  assoc('snapshotVersion', record.version, record)
 
 const parseSnapshot =
   when(Boolean, compose(copySnapshotVersion, prop('data')))
@@ -42,12 +35,14 @@ const parseSnapshot =
 // Entity :: Object -> { fetch: String -> Promise [ a, Number ] }
 const Entity = db => opts => {
   const {
-    cache,
+    cacheEnabled,
+    cacheLimit,
     category,
     handlers = {},
     init,
     name,
-    snapshot
+    snapshotEnabled,
+    snapshotInterval
   } = applyDefaults(opts)
 
   if (!category)
@@ -59,22 +54,22 @@ const Entity = db => opts => {
   const debug =
     require('../lib/debug').extend(`entity-${name}`)
 
-  debug('cache enabled: %o', cache.enabled)
-  debug('snapshot enabled: %o', snapshot.enabled)
+  debug('cache enabled: %o', cacheEnabled)
+  debug('snapshot enabled: %o', snapshotEnabled)
 
-  const _cache = cache.enabled && new LRUCache(cache.limit)
+  const cache = cacheEnabled && new LRUCache(cacheLimit)
 
   const fetch = async id => {
     debug('fetching: %o', id)
     let record
 
-    if (_cache) {
-      record = _cache.get(id)
+    if (cache) {
+      record = cache.get(id)
       if (record) debug('cache hit: %o', record)
       else debug('cache miss: %o', id)
     }
 
-    if (snapshot.enabled && !record) {
+    if (snapshotEnabled && !record) {
       record = await getSnapshot(id)
       if (record) debug('snapshot loaded: %o', record)
       else debug('snapshot not found: %o', id)
@@ -92,16 +87,16 @@ const Entity = db => opts => {
     debug('fetched: %o', cleanSnapshot(record))
 
     if (
-      snapshot.enabled &&
-      (record.version - record.snapshotVersion) >= snapshot.interval
+      snapshotEnabled &&
+      (record.version - record.snapshotVersion) >= snapshotInterval
     ) {
       record = copySnapshotVersion(record)
       await putSnapshot(id, record)
       debug('snapshot recorded: %o', { id, version: record.version })
     }
 
-    if (_cache) {
-      _cache.set(id, record)
+    if (cache) {
+      cache.set(id, record)
       debug('cached: %o', { id, version: record.version })
     }
 

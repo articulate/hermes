@@ -1,18 +1,13 @@
-const { evolve, pipe, when } = require('tinyfunk')
-const { renameAll } = require('@articulate/funky')
-
-const parseMessage =
-  when(Boolean, pipe(
-    renameAll({
-      global_position: 'globalPosition',
-      stream_name: 'streamName'
-    }),
-    evolve({
-      data: JSON.parse,
-      globalPosition: Number,
-      metadata: JSON.parse,
-      position: Number
-    })
-  ))
+const parseMessage = msg =>
+  msg && {
+    id:             msg.id,
+    streamName:     msg.stream_name,
+    type:           msg.type,
+    position:       Number(msg.position),
+    globalPosition: Number(msg.global_position),
+    data:           JSON.parse(msg.data),
+    metadata:       JSON.parse(msg.metadata),
+    time:           msg.time
+  }
 
 module.exports = parseMessage

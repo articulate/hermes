@@ -1,10 +1,10 @@
 const _ = require('highland')
 const { mapObj, merge, pipe, thrush } = require('tinyfunk')
-const { once } = require('ramda')
 const { Pool } = require('pg')
 const QueryStream = require('pg-query-stream')
 
 const debug = require('../lib/debug').extend('db')
+const once = require('../lib/once')
 
 const db = {
   getCategoryMessages: require('./getCategoryMessages'),
