@@ -8,7 +8,9 @@ afterEach(() =>
   pg.query('TRUNCATE message_store.messages RESTART IDENTITY')
 )
 
-after(() => {
-  hermes.cleanup()
-  pg.cleanup()
-})
+after(() =>
+  Promise.all([
+    hermes.cleanup(),
+    pg.cleanup()
+  ])
+)

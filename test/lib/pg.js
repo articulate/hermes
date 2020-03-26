@@ -9,8 +9,13 @@ const cleanup = () =>
 
 const query = async (sql, vals=[]) => {
   const client = await pool.connect()
-  const res = await client.query(sql, vals)
-  client.release()
+
+  try {
+    var res = await client.query(sql, vals)
+  } finally {
+    client.release()
+  }
+
   return res.rows
 }
 

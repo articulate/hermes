@@ -1,27 +1,17 @@
 const { assoc, dissoc } = require('tinyfunk')
 const { expect } = require('chai')
 const property = require('prop-factory')
-const uuid = require('uuid')
 
 const { query } = require('./lib/pg')
+const Signup = require('./lib/Signup')
 const { VersionConflictError, writeMessage } = require('./lib/hermes')
 
 describe('writeMessage', () => {
   const msg = property()
-  let streamName, traceId, userId, valid
+  let valid
 
   beforeEach(() => {
-    traceId = uuid.v4()
-    userId = uuid.v4()
-
-    streamName = `userSignup-${userId}`
-
-    valid = {
-      streamName,
-      type: 'Signup',
-      data: { userId },
-      metadata: { traceId, userId }
-    }
+    valid = Signup()
   })
 
   describe('when message.type is missing', () => {
@@ -41,7 +31,7 @@ describe('writeMessage', () => {
     )
 
     it('writes a message to the stream', async () => {
-      const res = await query('SELECT count(*) from message_store.messages WHERE stream_name = $1', [ streamName ])
+      const res = await query('SELECT count(*) from message_store.messages WHERE stream_name = $1', [ valid.streamName ])
       expect(Number(res[0].count)).to.equal(1)
     })
 
@@ -70,7 +60,7 @@ describe('writeMessage', () => {
     )
 
     it('writes a message to the stream', async () => {
-      const res = await query('SELECT count(*) from message_store.messages WHERE stream_name = $1', [ streamName ])
+      const res = await query('SELECT count(*) from message_store.messages WHERE stream_name = $1', [ valid.streamName ])
       expect(Number(res[0].count)).to.equal(1)
     })
   })
