@@ -14,7 +14,10 @@ const getStreamMessages = ({ queryS }) => opts => {
     opts.condition,
   ]
 
-  return queryS(sql, vals).map(parseMessage)
+  const stream = queryS(sql, vals)
+  const result = stream.map(parseMessage)
+  result.close = stream.close
+  return result
 }
 
 module.exports = getStreamMessages

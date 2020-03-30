@@ -28,7 +28,7 @@ describe('getCategoryMessages', () => {
     })
 
     it('streams over the messages in order', done => {
-      getCategoryMessages({ category: 'userSignup' })
+      getCategoryMessages({ category: 'userSignup:command' })
         .toArray(messages => {
           expect(messages.length).to.equal(3)
           expect(messages[0]).to.deep.include(msg1)
@@ -39,7 +39,7 @@ describe('getCategoryMessages', () => {
     })
 
     it('streams starting from a given position', done => {
-      getCategoryMessages({ category: 'userSignup', position: 2 })
+      getCategoryMessages({ category: 'userSignup:command', position: 2 })
         .toArray(messages => {
           expect(messages.length).to.equal(2)
           expect(messages[0]).to.deep.include(msg2)
@@ -49,7 +49,7 @@ describe('getCategoryMessages', () => {
     })
 
     it('streams limited by batchSize', done => {
-      getCategoryMessages({ batchSize: 2, category: 'userSignup' })
+      getCategoryMessages({ batchSize: 2, category: 'userSignup:command' })
         .toArray(messages => {
           expect(messages.length).to.equal(2)
           expect(messages[0]).to.deep.include(msg1)

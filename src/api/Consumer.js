@@ -1,5 +1,5 @@
 const _ = require('highland')
-const { mapObj, merge } = require('tinyfunk')
+const { identity, juxt, mapObj, merge } = require('tinyfunk')
 
 const once = require('../lib/once')
 const tapP = require('../lib/tapP')
@@ -27,20 +27,23 @@ const Consumer = db => opts => {
   const suffix = groupMember ? `-${groupMember}:${groupSize}` : ''
   const streamName = `${category}+position-${name}${suffix}`
 
-  let count = 0
-  let position = 0
+  let count
+  let pending
+  let position
   let up = false
 
   const debug =
     require('../lib/debug').extend(`consumer-${name}${suffix}`)
 
   const assignPosition = msg => {
-    position = msg ? msg.data.position : 0
+    position = msg ? msg.data.position : 1
   }
 
   const cleanup = once(signal => {
-    debug(`received ${signal}, stopping`)
-    up = false
+    if (up) {
+      debug(`received ${signal}, stopping`)
+      up = false
+    }
   })
 
   const handleMessage = msg =>
@@ -55,14 +58,21 @@ const Consumer = db => opts => {
     debug('dispatching message: %o', msg)
 
   const poll = () => {
+    if (!up) return
+
     const stream = db.getCategoryMessages(merge(pollOpts, { position }))
 
     stream.observe().each(logMessage)
 
-    stream.flatMap(handleMessage)
+    const processing = stream.flatMap(handleMessage)
       .flatMap(updatePosition)
-      .stopOnError(stop)
-      .done(tick)
+      .stopOnError(juxt([ stop, stream.close ]))
+
+    pending = processing.observe()
+      .reduce(undefined, identity)
+      .toPromise(Promise)
+
+    processing.done(tick)
   }
 
   const start = async () => {
@@ -82,6 +92,7 @@ const Consumer = db => opts => {
     await loadPosition()
     debug('position loaded: %o', position)
 
+    count = 0
     up = true
     poll()
   }
@@ -90,15 +101,21 @@ const Consumer = db => opts => {
     if (up) {
       debug(`stopping${err ? ' on error' : ''}`)
       up = false
-    } else {
-      debug('already stopped')
     }
 
     if (err) onError(err)
+
+    return pending
+      ? pending.then(stopped)
+      : Promise.resolve()
+  }
+
+  const stopped = () => {
+    debug('stopped')
   }
 
   const tick = () => {
-    if (up) setTimeout(poll, tickInterval)
+    setTimeout(poll, tickInterval)
   }
 
   const updatePosition = msg => {
@@ -107,7 +124,7 @@ const Consumer = db => opts => {
 
     if (count >= positionUpdateInterval) {
       count = 0
-      debug('position updated: %o', position)
+      debug('updating position: %o', position)
       return writePosition()
     } else {
       return _.of()

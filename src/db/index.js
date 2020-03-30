@@ -1,7 +1,7 @@
 const _ = require('highland')
+const Cursor = require('pg-cursor')
 const { mapObj, merge, pipe, thrush } = require('tinyfunk')
 const { Pool } = require('pg')
-const QueryStream = require('pg-query-stream')
 
 const debug = require('../lib/debug').extend('db')
 const once = require('../lib/once')
@@ -23,9 +23,12 @@ const dbFactory = opts => {
   pool.on('error', console.error)
 
   const cleanup = once(signal => {
-    debug((signal ? `received ${signal}, ` : '') + 'draining pool')
-    return pool.end().catch(console.error)
+    debug(`${signal ? `received ${signal}, ` : ''}draining pool`)
+    return pool.end().then(drained, console.error)
   })
+
+  const drained = () =>
+    debug('pool drained')
 
   // query :: (String, [a]) -> Promise b
   const query = async (sql, vals=[]) => {
@@ -41,13 +44,41 @@ const dbFactory = opts => {
   }
 
   // queryS :: (String, [a]) -> Stream b
-  const queryS = (sql, vals=[]) =>
-    _((async () => {
-      const client = await pool.connect()
-      const stream = _(client.query(new QueryStream(sql, vals)))
-      stream.observe().done(() => client.release())
-      return stream
-    })()).flatten()
+  const queryS = (sql, vals=[]) => {
+    let client, cursor
+
+    const close = once(err1 => {
+      debug(`closing cursor${err1 ? ' on error' : ''}`)
+      cursor.close(err2 =>
+        client.release(err1 || err2)
+      )
+    })
+
+    const openCursor = klient => {
+      debug('opening cursor')
+      client = klient
+      cursor = client.query(new Cursor(sql, vals))
+
+      return _((push, next) => {
+        cursor.read(100, (err, rows) => {
+          if (err) {
+            push(err)
+            next()
+          } else if (rows.length) {
+            push(null, rows)
+            next()
+          } else {
+            push(null, _.nil)
+          }
+        })
+      }).flatten()
+    }
+
+    const stream = _(pool.connect()).flatMap(openCursor)
+    stream.observe().done(close)
+    stream.close = close
+    return stream
+  }
 
   process.once('SIGHUP', cleanup)
   process.once('SIGINT', cleanup)

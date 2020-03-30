@@ -78,10 +78,20 @@ const Entity = db => opts => {
     if (!record)
       record = merge(emptyRecord, { entity: init, id })
 
-    record = await db.getStreamMessages({
+    const params = {
       streamName: `${category}-${id}`,
       position: record.version
-    }).reduce(record, handle)
+    }
+
+    const stream = db.getStreamMessages(params)
+
+    const onError = (err, push) => {
+      stream.close(err)
+      push(err)
+    }
+
+    record = await stream.reduce(record, handle)
+      .stopOnError(onError)
       .toPromise(Promise)
 
     debug('fetched: %o', cleanSnapshot(record))

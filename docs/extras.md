@@ -10,6 +10,8 @@ getCategoryMessages :: Object -> Stream Message
 
 Accepts an object of options and returns a [Highland Stream](http://highlandjs.org/) of messages.  Used internally by [consumers](/api?id=consumer) to poll the message store for new messages in a category.
 
+!> **Uses a [Postgres cursor](https://node-postgres.com/api/cursor) to efficiently iterate over large categories.**  The cursor will close automatically at the end of the result set, but if you need to finish early for any reason, be sure to call the `stream.close()` function to avoid leaking the cursor.  See the example below.
+
 | Option        | Type     | Default | Description                                                                                         |
 |:--------------|:---------|:--------|:----------------------------------------------------------------------------------------------------|
 | `batchSize`   | `Number` | `1000`  | Number of messages to retrieve in a single batch                                                    |
@@ -23,10 +25,11 @@ Accepts an object of options and returns a [Highland Stream](http://highlandjs.o
 ```js
 const { getCategoryMessages } = require('../lib/hermes')
 
-getCategoryMessages({
+const stream = getCategoryMessages({
   category: `userActivation`,
   position: 100
 }).flatMap(handleMessage)
+  .stopOnError(() => stream.close())
   .done(() => console.log('done'))
 ```
 
@@ -54,6 +57,8 @@ getStreamMessages :: Object -> Stream Message
 
 Accepts an object of options, and returns a [Highland Stream](http://highlandjs.org/) of messages.  Used internally by [entity stores](/api?id=entity) to project over the messages in an individual stream.
 
+!> **Uses a [Postgres cursor](https://node-postgres.com/api/cursor) to efficiently iterate over large streams.**  The cursor will close automatically at the end of the result set, but if you need to finish early for any reason, be sure to call the `stream.close()` function to avoid leaking the cursor.  See the example below.
+
 | Option       | Type     | Default | Description                                              |
 |:-------------|:---------|:--------|:---------------------------------------------------------|
 | `batchSize`  | `Number` | `1000`  | Number of messages to retrieve in a single batch         |
@@ -62,10 +67,11 @@ Accepts an object of options, and returns a [Highland Stream](http://highlandjs.
 | `streamName` | `String` |         | Name of stream from which to receive messages (required) |
 
 ```js
-const { getStreamMessages } = require('../lib/herms')
+const { getStreamMessages } = require('../lib/hermes')
 
-getStreamMessages({ streamName: `userActivation-${userId}` })
+const stream = getStreamMessages({ streamName: `userActivation-${userId}` })
   .flatMap(handleMessage)
+  .stopOnError(() => stream.close())
   .done(() => console.log('done'))
 ```
 

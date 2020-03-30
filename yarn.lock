@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@articulate/spy@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@articulate/spy/-/spy-0.0.1.tgz#2da9fdb919075fa5fc3868017e17b43b8528a399"
+  integrity sha512-Ewt95Ba4Kg/n28OMqm/bfUOeq7vURjYL1EXmPOVzqMPPG1tBGPcEftQzlcIb+cz9rNh/5d7uxdPo9eqD8x5hXg==
+
 "@babel/code-frame@^7.0.0":
   version "7.8.3"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.8.3.tgz#33e25903d7481181534e12ec0a25f16b6fcf419e"
@@ -1085,13 +1090,6 @@ pg-pool@^2.0.10:
   version "2.0.10"
   resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-2.0.10.tgz#842ee23b04e86824ce9d786430f8365082d81c4a"
   integrity sha512-qdwzY92bHf3nwzIUcj+zJ0Qo5lpG/YxchahxIN8+ZVmXqkahKXsnl2aiJPHLYN9o5mB/leG+Xh6XKxtP7e0sjg==
-
-pg-query-stream@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/pg-query-stream/-/pg-query-stream-3.0.3.tgz#3f3c739d88218ace802ce3f00ab212b258296235"
-  integrity sha512-b3AgKU03eu+qYMNmdNw0N0Z0JtjY0AnsJbhxmW6ILQ6TitGZpDWv5FCUh9f7Mx2G31EzfsiQ+RfXaOHvYK24qA==
-  dependencies:
-    pg-cursor "^2.1.6"
 
 pg-types@^2.1.0:
   version "2.2.0"
