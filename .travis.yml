@@ -1,7 +1,11 @@
 language: node_js
+node_js:
+  - '12'
 services:
   - docker
 install:
+  - docker-compose --version
   - docker-compose build
+  - docker-compose up -d postgres
 script:
   - docker-compose run --rm app
