@@ -80,10 +80,12 @@ const Entity = db => opts => {
 
     const params = {
       streamName: `${category}-${id}`,
-      position: record.version
+      position: record.version + 1
     }
 
     const stream = db.getStreamMessages(params)
+
+    stream.observe().each(logEvent)
 
     const onError = (err, push) => {
       stream.close(err)
@@ -126,6 +128,9 @@ const Entity = db => opts => {
       version: event.position
     })
   }
+
+  const logEvent = event =>
+    debug('projecting event: %o', event)
 
   const putSnapshot = (id, record) =>
     db.writeMessage({

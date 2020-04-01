@@ -74,7 +74,7 @@ module.exports =
   })
 ```
 
-?> **Notice the idempotence check in the handler.**  We only want to act on a message if we haven't previously acted on it.  Messages in a stream are processed in order, but consumers restart all the time (whether by chaos or actual deploys), so messages are frequently reprocessed.  Therefore, your message handlers **must be idempotent.**  A collection of common idempotence patterns is included in [Best Practices](/best-practices?id=idempotence-patterns).
+?> **Notice the idempotence check in the handler.**  We only want to act on a message if we haven't previously acted on it.  Messages in a stream are processed in order, but consumers restart all the time (whether by chaos or actual deploys), so messages are frequently reprocessed.  Therefore, your message handlers **must be idempotent.**  A collection of common idempotence patterns is [included here](/idempotence-patterns).
 
 ### Starting / Stopping
 
