@@ -1,0 +1,7 @@
+language: node_js
+services:
+  - docker
+install:
+  - docker-compose build
+script:
+  - docker-compose run --rm app
