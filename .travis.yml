@@ -1,12 +1,17 @@
 language: node_js
 node_js:
   - '12'
-services:
-  - docker
-install:
-  - docker-compose --version
-  - docker-compose build
-  - docker-compose up -d postgres
-  - docker-compose ps
+addons:
+  postgresql: "10"
+env:
+  - MESSAGE_STORE_URI=postgresql://message_store@localhost:5432/message_store
+  - TEST_DB_URI=postgresql://postgres@localhost:5432/message_store
+before_install:
+  - npm i -g yarn
+before_script:
+  - wget https://github.com/message-db/message-db/archive/v1.1.6.tar.gz message-db.tar.gz
+  - tar -xzf message-db.tar.gz
+  - ./message-db-1.1.6/install.sh
 script:
-  - docker-compose run --rm app
+  - yarn lint
+  - yarn test

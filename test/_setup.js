@@ -14,6 +14,3 @@ after(() =>
     pg.cleanup()
   ])
 )
-
-const { pick } = require('tinyfunk')
-console.log(pick(['MESSAGE_STORE_URI', 'TEST_DB_URI'], process.env))
