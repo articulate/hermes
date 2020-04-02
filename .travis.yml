@@ -1,8 +1,9 @@
 language: node_js
 node_js:
+  - '10'
   - '12'
 addons:
-  postgresql: "10"
+  postgresql: '10'
 env:
   - MESSAGE_STORE_URI=postgresql://message_store@localhost:5432/message_store TEST_DB_URI=postgresql://postgres@localhost:5432/message_store
 before_install:
