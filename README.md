@@ -7,6 +7,11 @@
 <p align="center">
   Event-sourced autonomous service toolkit for Node.js
 </p>
+<p align="center">
+  <a href="https://www.npmjs.com/package/@articulate/hermes"><img src="https://img.shields.io/npm/v/@articulate/hermes" alt="npm version" style="max-width:100%;"></a>
+  <a href="https://www.npmjs.com/package/@articulate/hermes"><img src="https://img.shields.io/npm/dm/@articulate/hermes" alt="npm downloads" style="max-width:100%;"></a>
+  <a href="https://travis-ci.org/articulate/hermes"><img src="https://travis-ci.org/articulate/hermes.svg?branch=master" alt="Build Status" style="max-width:100%;"></a>
+</p>
 
 ## Install
 
@@ -42,3 +47,12 @@ yarn docs
 ```
 
 Local docs will then be available at: http://localhost:4000
+
+## Tests
+
+The tests run in [Travis CI](https://travis-ci.org/github/articulate/hermes), but you can run the tests locally with `docker-compose` like so:
+
+```
+docker-compose build
+docker-compose run --rm test
+```

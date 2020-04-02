@@ -1,6 +1,6 @@
 version: '2.4'
 services:
-  app:
+  test:
     volumes:
       - './package.json:/hermes/package.json'
       - './src:/hermes/src'
