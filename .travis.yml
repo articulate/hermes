@@ -9,9 +9,8 @@ before_install:
   - npm i -g yarn
 before_script:
   - wget https://github.com/message-db/message-db/archive/v1.1.6.tar.gz
-  - tar -xvzf v1.1.6.tar.gz
-  - ls -alh
-  - ./v1.1.6/install.sh
+  - tar -xzf v1.1.6.tar.gz
+  - ./message-db-1.1.6/database/install.sh
 script:
   - yarn lint
   - yarn test
