@@ -4,13 +4,12 @@ node_js:
 addons:
   postgresql: "10"
 env:
-  - MESSAGE_STORE_URI=postgresql://message_store@localhost:5432/message_store
-  - TEST_DB_URI=postgresql://postgres@localhost:5432/message_store
+  - MESSAGE_STORE_URI=postgresql://message_store@localhost:5432/message_store TEST_DB_URI=postgresql://postgres@localhost:5432/message_store
 before_install:
   - npm i -g yarn
 before_script:
-  - wget https://github.com/message-db/message-db/archive/v1.1.6.tar.gz message-db.tar.gz
-  - tar -xzf message-db.tar.gz
+  - wget https://github.com/message-db/message-db/archive/v1.1.6.tar.gz
+  - tar -xzf v1.1.6.tar.gz
   - ./message-db-1.1.6/install.sh
 script:
   - yarn lint
