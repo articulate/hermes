@@ -7,5 +7,6 @@ install:
   - docker-compose --version
   - docker-compose build
   - docker-compose up -d postgres
+  - docker-compose ps
 script:
   - docker-compose run --rm app
