@@ -61,15 +61,9 @@ const dbFactory = opts => {
 
       return _((push, next) => {
         cursor.read(100, (err, rows) => {
-          if (err) {
-            push(err)
-            next()
-          } else if (rows.length) {
-            push(null, rows)
-            next()
-          } else {
-            push(null, _.nil)
-          }
+          push(err, rows)
+          if (rows.length) next()
+          else push(null, _.nil)
         })
       }).flatten()
     }
