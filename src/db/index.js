@@ -60,7 +60,7 @@ const dbFactory = opts => {
       cursor = client.query(new Cursor(sql, vals))
 
       return _((push, next) => {
-        cursor.read(100, (err, rows) => {
+        cursor.read(100, (err, rows=[]) => {
           push(err, rows)
           if (rows.length) next()
           else push(null, _.nil)
