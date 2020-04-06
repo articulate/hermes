@@ -21,7 +21,7 @@ yarn add @articulate/hermes
 
 ## Setup
 
-Follow the [setup instructions](https://github.com/message-db/message-db) for `message-db` to initialize the message store, or use [this Docker image](https://hub.docker.com/r/ethangarofolo/message-db) for local dev.  Then provide connection options as below:
+Follow the [setup instructions](https://github.com/message-db/message-db) for Message DB to initialize the message store, or use [this Docker image](https://hub.docker.com/r/ethangarofolo/message-db) for local dev.  Then provide connection options as below:
 
 ```js
 // server/lib/hermes.js
@@ -47,6 +47,22 @@ yarn docs
 ```
 
 Local docs will then be available at: http://localhost:4000
+
+## Logging
+
+Hermes uses the [`debug`](https://github.com/visionmedia/debug) library to output raw logs.  To turn on all of the logs, include the following environment variable:
+
+```
+DEBUG=hermes:*
+```
+
+When debugging locally, these additional variables may also help.  See the `debug` docs for [the full list of options](https://github.com/visionmedia/debug/#environment-variables).
+
+```
+DEBUG_COLORS=true
+DEBUG_DEPTH=null
+DEBUG_HIDE_DATE=true
+```
 
 ## Tests
 

@@ -53,6 +53,22 @@ yarn docs
 
 Local docs will then be available at: http://localhost:4000
 
+## Logging
+
+Hermes uses the [`debug`](https://github.com/visionmedia/debug) library to output raw logs.  To turn on all of the Hermes logs, include the following environment variable:
+
+```
+DEBUG=hermes:*
+```
+
+When debugging locally, these additional variables may also help.  See the `debug` docs for [the full list of options](https://github.com/visionmedia/debug/#environment-variables).
+
+```
+DEBUG_COLORS=true
+DEBUG_DEPTH=null
+DEBUG_HIDE_DATE=true
+```
+
 ## Tests
 
 The tests run in [Travis CI](https://travis-ci.org/github/articulate/hermes), but you can run the tests locally with `docker-compose` like so:
