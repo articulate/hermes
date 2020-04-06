@@ -1,0 +1,16 @@
+version: '2.4'
+services:
+  test:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      MESSAGE_STORE_URI: postgresql://message_store@postgres:5432/message_store
+      TEST_DB_URI: postgresql://postgres@postgres:5432/message_store
+
+  postgres:
+    image: ethangarofolo/message-db:1.1.6
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    expose:
+      - '5432'

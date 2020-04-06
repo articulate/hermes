@@ -1,0 +1,6 @@
+* [Getting Started](/)
+* [Event Sourcing](event-sourcing.md)
+* [API](api.md)
+* [Extras](extras.md)
+* [Best Practices](best-practices.md)
+* [Idempotence Patterns](idempotence-patterns.md)

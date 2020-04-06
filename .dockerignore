@@ -1,0 +1,13 @@
+*.log
+.DS_Store
+.env
+.git
+.gitignore
+.travis.yml
+docker-compose.override.example.yml
+docker-compose.override.yml
+docker-compose.yml
+Dockerfile
+LICENSE
+node_modules
+README.md

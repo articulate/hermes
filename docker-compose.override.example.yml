@@ -1,0 +1,12 @@
+version: '2.4'
+services:
+  test:
+    volumes:
+      - './package.json:/hermes/package.json'
+      - './src:/hermes/src'
+      - './test:/hermes/test'
+      - './yarn.lock:/hermes/yarn.lock'
+
+  postgres:
+    ports:
+      - '5432:5432'

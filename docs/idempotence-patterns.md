@@ -1,0 +1,3 @@
+# Idempotence Patterns
+
+[ TODO ]
