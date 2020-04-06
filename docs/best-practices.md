@@ -6,7 +6,7 @@ Perhaps "best practices" is a bit pretentious.  As Captain Barbosa would say:
 
 ## Naming Things
 
-As one of the [two hardest things in programming](https://www.martinfowler.com/bliki/TwoHardThings.html), naming things gets a bit easier with guidelines in place.  These guidelines were passed down to me by others with more experience.  The main thing to keep in mind here is that your event-sourced system is a model and implementation of one or more processes:
+As one of the [two hardest things in programming](https://www.martinfowler.com/bliki/TwoHardThings.html), naming things gets a bit easier with guidelines in place.  These guidelines were passed down to me by others with more experience.  The main thing to keep in mind here is that your event-sourced system implements one or more **processes**:
 
 ?> A **component** is another name for a service, and a **service** is a **process**.<br/>
 A **stream** is a list of all the steps you took in a **process**.<br/>

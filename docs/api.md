@@ -250,7 +250,7 @@ const writeActivated = ({ traceId, userId }) =>
 const traceId = '7f05f368-7536-4e0a-a45d-39be622ccdf0'
 const userId = '5e89a6b6-f2b9-402e-a8d1-0e7bf75641d5'
 
-writeMessage({ traceId, userId })
+writeActivated({ traceId, userId })
 // Resolves with { id: '39f0936c-0809-48a7-bea8-dab56ad7acd5', ...message }
 ```
 

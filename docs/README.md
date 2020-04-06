@@ -55,7 +55,7 @@ Local docs will then be available at: http://localhost:4000
 
 ## Logging
 
-Hermes uses the [`debug`](https://github.com/visionmedia/debug) library to output raw logs.  To turn on all of the Hermes logs, include the following environment variable:
+Hermes uses the [`debug`](https://github.com/visionmedia/debug) library to output raw logs.  To turn on all of the logs, include the following environment variable:
 
 ```
 DEBUG=hermes:*
