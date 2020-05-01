@@ -4,7 +4,7 @@ If you try to search for a good definitions for "autonomous services" or "event 
 
 * **Barry O Sullivan** makes a good case for the what and why of event-sourcing in his blog post, [Event Sourcing: What it is and why it's awesome](https://dev.to/barryosull/event-sourcing-what-it-is-and-why-its-awesome).
 
-* **Ethan Garofolo** provides a solid walk-through of designing a a system of evented autonomous services using Javascript in his book, [_Practical Microservices_](https://pragprog.com/book/egmicro/practical-microservices).
+* **Ethan Garofolo** provides a solid walk-through of designing a system of evented autonomous services using Javascript in his book, [_Practical Microservices_](https://pragprog.com/book/egmicro/practical-microservices).
 
 * **Scott Bellware** gives a clear explanation of evented autonomous services as implemented in Eventide, the inspiration behind Hermes, in this conference talk:
 
