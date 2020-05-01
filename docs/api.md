@@ -1,6 +1,6 @@
 # API
 
-Pretty much every event-sourced system built with Hermes will need to:
+Pretty much every system built with Hermes will need to:
 
 - Write messages to the message store with [`writeMessage`](/api?id=writemessage).
 - Consume messages and handle them with a [`Consumer`](/api?id=consumer).
@@ -14,9 +14,9 @@ There are [some extras](/extras) that help in various situations, but these thre
 Consumer :: Object -> { start, stop }
 ```
 
-Initializes a consumer with an object of options, returning an interface with `start` and `stop` functions.  A consumer processes ordered messages from a single [category](/event-sourcing?id=stream), keeping track of its position to resume processing after restarts.  Once finished reading a category, it continues to poll for new messages.
+Initializes a consumer with an object of options, returning an interface with `start` and `stop` functions.  A consumer processes ordered messages from a single [category](/core-concepts?id=stream), keeping track of its position to resume processing after restarts.  Once finished reading a category, it continues to poll for new messages.
 
-?> **Consumers put the "autonomy" in event-sourced autonomous services,** because they operate as independent actors.  If one goes down, the rest will presumably stay up and running (unless you [host them together](/api?id=starting-stopping)).
+?> **Consumers put the "autonomy" in evented autonomous services,** because they operate as independent actors.  If one goes down, the rest will presumably stay up and running (unless you [host them together](/api?id=starting-stopping)).
 
 Consumers can act either as components, which process messages and write new events, or aggregators, which process events to update read models.  From an implementation standpoint, the main difference that is aggregators will often use an `init` function to initialize the read model, while components will not.
 
@@ -78,7 +78,7 @@ module.exports =
 
 ### Starting / Stopping
 
-A consumer is constructed in a dormant state, and will not begin processing messages until you call its `start()` function.  If desired, multiple related consumers that together form one [component](/event-sourcing?id=service) can be run together on a single host.  Starting them together is simple:
+A consumer is constructed in a dormant state, and will not begin processing messages until you call its `start()` function.  If desired, multiple related consumers that together form one [component](/core-concepts?id=service) can be run together on a single host.  Starting them together is simple:
 
 ```js
 const components = [
@@ -89,7 +89,7 @@ const components = [
 components.forEach(comp => comp.start())
 ```
 
-!> **When one of its handlers rejects with an error, a consumer will automatically stop processing messages and then re-throw the error, which will likely kill the process.**  (See [Error Handling](/api?id=error-handling) for details.)  So if you've grouped multiple consumers onto a single host like this, a failure in one will stop the rest.  You'll want to balance the cost of isolated hosting with the risk of these types of failures.  However, if the consumers are related and together form one [component](/event-sourcing?id=service), it may be completely appropriate to stop them all.
+!> **When one of its handlers rejects with an error, a consumer will automatically stop processing messages and then re-throw the error, which will likely kill the process.**  (See [Error Handling](/api?id=error-handling) for details.)  So if you've grouped multiple consumers onto a single host like this, a failure in one will stop the rest.  You'll want to balance the cost of isolated hosting with the risk of these types of failures.  However, if the consumers are related and together form one [component](/core-concepts?id=service), it may be completely appropriate to stop them all.
 
 If you need to stop manually for any other reason, simply call its `stop()` function, which returns a `Promise` that resolves when all processing has stopped.
 
@@ -147,7 +147,7 @@ Initializes an entity store with an object of options, and returns a interface w
 
 ?> **An entity is not the same as a "model" or a "SQL table" in a CRUD system.**  It is instead a reduction of the events in a single stream using a particular projection.  If you have a background in functional programming, you may be familiar with the concept of a reducer: a projection is just a reducer.  Multiple entities may be created from the same events in a stream using different projections, but often you will only need one per component.
 
-The events in the message store are the source of truth in an event-sourced system.  [Components](/event-sourcing?id=service) (built with [consumers](/api?id=consumer)) often query the current state of the message store by projecting entities.  [Aggregators](/event-sourcing?id=service) usually don't need to work with entities.
+The events in the message store are the source of truth in an event-sourced system.  [Components](/core-concepts?id=service) (built with [consumers](/api?id=consumer)) often query the current state of the message store by projecting entities.  [Aggregators](/core-concepts?id=service) usually don't need to work with entities.
 
 ### Options / Example
 
@@ -224,7 +224,7 @@ writeMessage :: Message -> Promise Message
 
 Writes a message to a named stream in the message store in an append-only manner, and resolves with a copy of the message with the autogenerated `id` included.
 
-!> **This is the only means by which you should be writing to the message store.**  Streams of messages are [append-only and immutable by design](/event-sourcing?id=stream).  If you find yourself asking, **"Why can't I update an event?"**, then I strongly recommend checking out Greg Young's answer to that question (and what you can do about it) in his free book, [_Versioning in an Event Sourced System_](https://leanpub.com/esversioning/read#leanpub-auto-why-cant-i-update-an-event).
+!> **This is the only means by which you should be writing to the message store.**  Streams of messages are [append-only and immutable by design](/core-concepts?id=stream).  If you find yourself asking, **"Why can't I update an event?"**, then I strongly recommend checking out Greg Young's answer to that question (and what you can do about it) in his free book, [_Versioning in an Event Sourced System_](https://leanpub.com/esversioning/read#leanpub-auto-why-cant-i-update-an-event).
 
 ### Attributes / Example
 

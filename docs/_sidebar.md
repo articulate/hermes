@@ -1,5 +1,5 @@
 * [Getting Started](/)
-* [Event Sourcing](event-sourcing.md)
+* [Core Concepts](core-concepts.md)
 * [API](api.md)
 * [Extras](extras.md)
 * [Best Practices](best-practices.md)
