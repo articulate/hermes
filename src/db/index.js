@@ -1,5 +1,3 @@
-const _ = require('highland')
-const Cursor = require('pg-cursor')
 const { mapObj, merge, pipe, thrush } = require('tinyfunk')
 const { Pool } = require('pg')
 
@@ -43,43 +41,12 @@ const dbFactory = opts => {
     return res.rows
   }
 
-  // queryS :: (String, [a]) -> Stream b
-  const queryS = (sql, vals=[]) => {
-    let client, cursor
-
-    const close = once(err1 => {
-      debug(`closing cursor${err1 ? ' on error' : ''}`)
-      cursor.close(err2 =>
-        client.release(err1 || err2)
-      )
-    })
-
-    const openCursor = klient => {
-      debug('opening cursor')
-      client = klient
-      cursor = client.query(new Cursor(sql, vals))
-
-      return _((push, next) => {
-        cursor.read(100, (err, rows=[]) => {
-          push(err, rows)
-          if (rows.length) next()
-          else push(null, _.nil)
-        })
-      }).flatten()
-    }
-
-    const stream = _(pool.connect()).flatMap(openCursor)
-    stream.observe().done(close)
-    stream.close = close
-    return stream
-  }
-
   process.once('SIGHUP', cleanup)
   process.once('SIGINT', cleanup)
   process.once('SIGTERM', cleanup)
 
   return pipe(
-    mapObj(thrush({ query, queryS })),
+    mapObj(thrush({ query })),
     merge({ cleanup })
   )(db)
 }
