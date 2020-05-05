@@ -26,9 +26,14 @@ const getStreamMessages = ({ query }) => opts => {
     ]
 
     const send = rows => {
-      push(null, rows)
-      if (rows.length) next()
-      else push(null, _.nil)
+      if (rows.length) {
+        debug('stream messages found: %o', { streamName, count: rows.length })
+        push(null, rows)
+        next()
+      } else {
+        debug('end of stream: %o', { streamName })
+        push(null, _.nil)
+      }
     }
 
     query(sql, vals).then(send, push)

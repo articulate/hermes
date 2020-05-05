@@ -32,9 +32,14 @@ const getCategoryMessages = ({ query }) => opts => {
     ]
 
     const send = rows => {
-      push(null, rows)
-      if (rows.length) next()
-      else push(null, _.nil)
+      if (rows.length) {
+        debug('category messages found: %o', { category, count: rows.length })
+        push(null, rows)
+        next()
+      } else {
+        debug('end of category: %o', { category })
+        push(null, _.nil)
+      }
     }
 
     query(sql, vals).then(send, push)
