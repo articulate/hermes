@@ -48,12 +48,13 @@ describe('getStreamMessages', () => {
         })
     })
 
-    it('streams limited by batchSize', done => {
+    it('batchSize is configurable, but still streams all messages', done => {
       getStreamMessages({ batchSize: 2, streamName: msg1.streamName })
         .toArray(messages => {
-          expect(messages.length).to.equal(2)
+          expect(messages.length).to.equal(3)
           expect(messages[0]).to.deep.include(msg1)
           expect(messages[1]).to.deep.include(msg2)
+          expect(messages[2]).to.deep.include(msg3)
           done()
         })
     })

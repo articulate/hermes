@@ -1,5 +1,5 @@
 const _ = require('highland')
-const { identity, juxt, mapObj, merge } = require('tinyfunk')
+const { identity, mapObj, merge } = require('tinyfunk')
 
 const once = require('../lib/once')
 const tapP = require('../lib/tapP')
@@ -66,7 +66,7 @@ const Consumer = db => opts => {
 
     const processing = stream.flatMap(handleMessage)
       .flatMap(updatePosition)
-      .stopOnError(juxt([ stop, stream.close ]))
+      .stopOnError(stop)
 
     pending = processing.observe()
       .reduce(undefined, identity)
