@@ -36,7 +36,7 @@ const getStreamMessages = ({ query }) => opts => {
       }
     }
 
-    query(sql, vals).then(send, push)
+    query(sql, vals).then(send).catch(push)
   }
 
   const updatePosition = tap(msg => {
