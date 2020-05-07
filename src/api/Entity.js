@@ -87,13 +87,12 @@ const Entity = db => opts => {
 
     stream.observe().each(logEvent)
 
-    const onError = (err, push) => {
-      stream.close(err)
+    const rethrow = (err, push) => {
       push(err)
     }
 
     record = await stream.reduce(record, handle)
-      .stopOnError(onError)
+      .stopOnError(rethrow)
       .toPromise(Promise)
 
     debug('fetched: %o', cleanSnapshot(record))
