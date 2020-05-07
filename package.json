@@ -1,6 +1,6 @@
 {
   "name": "@articulate/hermes",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Event-sourced autonomous service toolkit for Node.js",
   "main": "src/index.js",
   "repository": "git@github.com:articulate/hermes.git",
