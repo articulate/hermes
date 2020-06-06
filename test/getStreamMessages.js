@@ -2,10 +2,12 @@ const _ = require('highland')
 const { assoc } = require('tinyfunk')
 const { expect } = require('chai')
 
-const { getStreamMessages, writeMessage } = require('./lib/hermes')
+const { memory, postgres } = require('./lib/hermes')
 const Signup = require('./lib/Signup')
 
-describe('getStreamMessages', () => {
+const test = hermes => () => {
+  const { getStreamMessages, writeMessage } = hermes
+
   it('returns a Highland stream', done => {
     const messages = getStreamMessages({ streamName: 'empty-stream' })
     expect(_.isStream(messages)).to.be.true
@@ -59,4 +61,9 @@ describe('getStreamMessages', () => {
         })
     })
   })
+}
+
+describe('getStreamMessages', () => {
+  describe('in memory', test(memory))
+  describe('in postgres', test(postgres))
 })

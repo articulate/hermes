@@ -2,12 +2,14 @@ const { expect } = require('chai')
 const spy = require('@articulate/spy')
 const wait = require('util').promisify(setTimeout)
 
-const { Consumer, writeMessage } = require('./lib/hermes')
+const { memory, postgres } = require('./lib/hermes')
 const Signup = require('./lib/Signup')
 
-describe('Consumer', () => {
+const test = hermes => () => {
+  const { Consumer, writeMessage } = hermes
+
   describe('when things go well', () => {
-    let init, testSignup
+    let init, testSignup, UserSignup
 
     beforeEach(() => {
       init = spy()
@@ -106,4 +108,9 @@ describe('Consumer', () => {
       expect(onError.calls.length).to.equal(1) // must have stopped
     })
   })
+}
+
+describe('Consumer', () => {
+  describe('in memory', test(memory))
+  describe('in postgres', test(postgres))
 })

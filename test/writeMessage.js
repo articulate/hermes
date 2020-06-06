@@ -4,9 +4,11 @@ const property = require('prop-factory')
 
 const { query } = require('./lib/pg')
 const Signup = require('./lib/Signup')
-const { VersionConflictError, writeMessage } = require('./lib/hermes')
+const { memory, postgres } = require('./lib/hermes')
 
-describe('writeMessage', () => {
+const test = hermes => () => {
+  const { VersionConflictError, writeMessage } = hermes
+
   const msg = property()
   let valid
 
@@ -31,8 +33,15 @@ describe('writeMessage', () => {
     )
 
     it('writes a message to the stream', async () => {
-      const res = await query('SELECT count(*) from message_store.messages WHERE stream_name = $1', [ valid.streamName ])
-      expect(Number(res[0].count)).to.equal(1)
+      if (hermes === memory) {
+        const stream = memory.store.streams.get(valid.streamName)
+        expect(stream.length).to.equal(1)
+      }
+
+      if (hermes === postgres) {
+        const res = await query('SELECT count(*) from message_store.messages WHERE stream_name = $1', [ valid.streamName ])
+        expect(Number(res[0].count)).to.equal(1)
+      }
     })
 
     it('resolves with the original message data', () => {
@@ -42,6 +51,16 @@ describe('writeMessage', () => {
     it('includes the generated id in the response', () => {
       expect(msg().id).to.be.a.uuid('v4')
     })
+
+    if (hermes === memory) {
+      it('appends the message to store.messages', () => {
+        expect(hermes.store.messages[0].type).to.equal('Signup')
+      })
+
+      it('sets the message as store.lastMessage', () => {
+        expect(hermes.store.lastMessage.type).to.equal('Signup')
+      })
+    }
   })
 
   describe('when the expectedVersion does not match', () => {
@@ -60,8 +79,20 @@ describe('writeMessage', () => {
     )
 
     it('writes a message to the stream', async () => {
-      const res = await query('SELECT count(*) from message_store.messages WHERE stream_name = $1', [ valid.streamName ])
-      expect(Number(res[0].count)).to.equal(1)
+      if (hermes === memory) {
+        const stream = memory.store.streams.get(valid.streamName)
+        expect(stream.length).to.equal(1)
+      }
+
+      if (hermes === postgres) {
+        const res = await query('SELECT count(*) from message_store.messages WHERE stream_name = $1', [ valid.streamName ])
+        expect(Number(res[0].count)).to.equal(1)
+      }
     })
   })
+}
+
+describe('writeMessage', () => {
+  describe('in memory', test(memory))
+  describe('in postgres', test(postgres))
 })

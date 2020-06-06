@@ -1,7 +1,7 @@
 const { head } = require('tinyfunk')
 
-const debug = require('../lib/debug').extend('db')
-const parseMessage = require('../lib/parseMessage')
+const debug = require('../../lib/debug').extend('db')
+const parseMessage = require('../../lib/parseMessage')
 
 const sql = 'SELECT * FROM message_store.get_last_stream_message($1)'
 

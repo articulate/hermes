@@ -1,7 +1,7 @@
 const uuid = require('uuid')
 
-const debug = require('../lib/debug').extend('db')
-const handleVersionConflict = require('../lib/handleVersionConflict')
+const debug = require('../../lib/debug').extend('db')
+const handleVersionConflict = require('../../lib/handleVersionConflict')
 
 const writeSql = 'SELECT message_store.write_message($1, $2, $3, $4, $5, $6)'
 

@@ -59,6 +59,13 @@ const Entity = db => opts => {
 
   const cache = cacheEnabled && new LRUCache(cacheLimit)
 
+  const clear = () => {
+    if (cache) {
+      cache.clear()
+      debug('cache cleared')
+    }
+  }
+
   const fetch = async id => {
     debug('fetching: %o', id)
     let record
@@ -138,7 +145,7 @@ const Entity = db => opts => {
       data: cleanSnapshot(record)
     })
 
-  return { fetch }
+  return { clear, fetch }
 }
 
 module.exports = Entity

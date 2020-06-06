@@ -140,10 +140,14 @@ const handlerWithRetries =
 ## Entity
 
 ```haskell
-Entity :: Object -> { fetch: String -> Promise [ a, Number ] }
+Entity :: Object -> { clear, fetch }
 ```
 
 Initializes an entity store with an object of options, and returns a interface with a `fetch` function.  Calling `fetch(id)` on an entity store is the primary means of querying for state in the message store.  The `fetch` function resolves with an `[entity, version]` pair, which are the projected entity and the current version of the stream.
+
+```haskell
+fetch :: String -> Promise [ a, Number ]
+```
 
 ?> **An entity is not the same as a "model" or a "SQL table" in a CRUD system.**  It is instead a reduction of the events in a single stream using a particular projection.  If you have a background in functional programming, you may be familiar with the concept of a reducer: a projection is just a reducer.  Multiple entities may be created from the same events in a stream using different projections, but often you will only need one per component.
 
@@ -206,6 +210,27 @@ const [ entity, version ] = await UserActivation.fetch(userId)
 To avoid projecting over every event in a stream every time, fetched entities will be cached in memory before resolving.  The next time the entity is fetched, it is first loaded from the cache, and then only new events are projected to update the entity.
 
 Caching is enabled by default with a max size of 1000 cached entities, but can be disabled or configured as desired.
+
+?> If you've enabled [mocking](/?id=mocking) to help test your [autonomous services](/core-concepts?id=service), then you may be clearing the store after each test.  With entity caching enabled as well, your entities may behave unexpectedly.  If so, you've run afowl of [one of the two hardest things in programming](https://www.martinfowler.com/bliki/TwoHardThings.html).  Avoid it by using the entity store's `clear` function to bust the cache.
+
+```js
+const hermes = require('@articulate/hermes')({
+  mock: process.env.NODE_ENV === 'test'
+})
+
+const UserActivation =
+  Entity({
+    name: 'UserActivation',
+    category: 'userActivation',
+    init,
+    handlers: { Activated, Deactivated }
+  })
+
+afterEach(() => {
+  hermes.store.clear()
+  UserActivation.clear()
+})
+```
 
 ### Snapshots
 

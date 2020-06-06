@@ -26,7 +26,7 @@ yarn add @articulate/hermes
 
 ## Setup
 
-Follow the [setup instructions](https://github.com/message-db/message-db) for Message DB to initialize the message store, or use [this Docker image](https://hub.docker.com/r/ethangarofolo/message-db) for local dev.  Then provide connection options as below:
+Follow the [setup instructions](https://github.com/message-db/message-db) for Message DB to initialize the message store, or use [this Docker image](https://hub.docker.com/r/articulate/message-db) for local dev.  Then provide connection options as below:
 
 ```js
 // server/lib/hermes.js
@@ -39,6 +39,8 @@ module.exports = require('@articulate/hermes')({
 You'll need at least a `connectionString`, but see the following for the full list of available options:
 - https://node-postgres.com/api/client
 - https://node-postgres.com/api/pool
+
+**Note:** You may alternatively specify the connection options using [standard Postgres environment variables](https://www.postgresql.org/docs/current/libpq-envars.html).
 
 ## Documentation
 
@@ -69,9 +71,29 @@ DEBUG_DEPTH=null
 DEBUG_HIDE_DATE=true
 ```
 
+## Mocking
+
+To help you test your [autonomous services](/core-concepts?id=service), Hermes ships with an in-memory substitute that passes [the same test suite](https://github.com/articulate/hermes/tree/master/test) as the default Message DB implementation.  Enable it with the `{ mock: true }` flag.  When enabled, Hermes will ignore any connection options specified, and will not connect to Postgres.
+
+In addition, you may clear the in-memory store after each test using `hermes.store.clear()`.
+
+```js
+const hermes = require('@articulate/hermes')({
+  mock: process.env.NODE_ENV === 'test'
+})
+
+afterEach(() => {
+  hermes.store.clear()
+})
+```
+
+**Read more** about testing with Hermes in the section on [entity caching](/api?id=caching).
+
+!> **Not for production use.**  The in-memory substitute implementation is only intended for testing.
+
 ## Tests
 
-The tests run in [Travis CI](https://travis-ci.org/github/articulate/hermes), but you can run the tests locally with `docker-compose` like so:
+The [Hermes tests](https://github.com/articulate/hermes/tree/master/test) run in [Travis CI](https://travis-ci.org/github/articulate/hermes), but you can run the tests locally with `docker-compose` like so:
 
 ```
 docker-compose build

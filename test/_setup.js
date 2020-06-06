@@ -5,12 +5,15 @@ const hermes = require('./lib/hermes')
 const pg = require('./lib/pg')
 
 afterEach(() =>
-  pg.query('TRUNCATE message_store.messages RESTART IDENTITY')
+  Promise.all([
+    hermes.memory.store.clear(),
+    pg.query('TRUNCATE message_store.messages RESTART IDENTITY')
+  ])
 )
 
 after(() =>
   Promise.all([
-    hermes.cleanup(),
+    hermes.postgres.cleanup(),
     pg.cleanup()
   ])
 )

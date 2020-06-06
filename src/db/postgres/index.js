@@ -1,8 +1,8 @@
 const { mapObj, merge, pipe, thrush } = require('tinyfunk')
 const { Pool } = require('pg')
 
-const debug = require('../lib/debug').extend('db')
-const once = require('../lib/once')
+const debug = require('../../lib/debug').extend('db')
+const once = require('../../lib/once')
 
 const db = {
   getCategoryMessages: require('./getCategoryMessages'),
