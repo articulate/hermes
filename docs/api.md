@@ -3,6 +3,7 @@
 Pretty much every system built with Hermes will need to:
 
 - Write messages to the message store with [`writeMessage`](/api?id=writemessage).
+- Implement message workflows with [`follow`](/api?id=follow).
 - Consume messages and handle them with a [`Consumer`](/api?id=consumer).
 - Project events into current state with an [`Entity`](/api?id=entity).
 
@@ -241,6 +242,77 @@ Entities are also periodically persistent to a durable cache in a process called
 ```
 
 If caching is disabled or an entity is not found in the cache, a snapshot will be loaded before projecting over newer events.  Snapshots are enabled by default with an interval of 100 messages, but can be disabled or configured as desired.
+
+## follow
+
+```haskell
+follow :: Message -> Message -> Message
+```
+
+Accepts a `prev` message and a `next` message, and returns a copy of `next` with [metadata](/core-concepts?id=message) included to track causation and correlation.
+
+?> **Use `follow` to implement message workflows.**  When messages represent subsequent steps in a workflow, a subsequent message's metadata records elements of the preceding message's metadata. Each message in a workflow carries provenance data of the message that precedes it.
+
+### Examples
+
+```js
+const Account = require('../entities/Account')
+const { follow, writeMessage } = require('../lib/hermes')
+const Opened = require('../events/Opened')
+
+const handleOpen = async open => {
+  const [ account, version ] = await Account.fetch(open.data.accountId)
+
+  if (account.opened)
+    return console.info('already opened, ignoring command: %o', open.id)
+
+  let opened = Opened(open.data)
+  opened = follow(open, opened)
+  opened.expectedVersion = version
+  await writeMessage(opened)
+}
+```
+
+Note that `follow` is curried, so you can compose it like this if you prefer:
+
+```js
+const { assoc, pipe, prop } = require('tinyfunk')
+
+const Account = require('../entities/Account')
+const { follow, writeMessage } = require('../lib/hermes')
+const Opened = require('../events/Opened')
+
+const handleOpen = async open => {
+  const [ account, version ] = await Account.fetch(open.data.accountId)
+
+  if (account.opened)
+    return console.info('already opened, ignoring command: %o', open.id)
+
+  return pipe(
+    prop('data'),
+    Opened,
+    follow(open),
+    assoc('expectedVersion', version),
+    writeMessage
+  )(open)
+}
+```
+
+!> **Notice:** In Hermes, `follow` does not copy `data` attributes, unlike the [Eventide implementation](http://docs.eventide-project.org/user-guide/messages-and-message-data/messages.html#message-workflows).
+
+### Metadata Transfer
+
+Provenance metadata is transfered to the subsequent message similar to below:
+
+```js
+next.metadata.causationMessageGlobalPosition = prev.globalPosition
+next.metadata.causationMessagePosition = prev.position
+next.metadata.causationMessageStreamName = prev.streamName
+next.metadata.correlationStreamName = prev.metadata.correlationStreamName
+next.metadata.replyStreamName = prev.metadata.replyStreamName
+```
+
+?>  This is intentionally compatible with the format of [provenance metadata in Eventide](http://docs.eventide-project.org/user-guide/messages-and-message-data/metadata.html#message-workflows).
 
 ## writeMessage
 

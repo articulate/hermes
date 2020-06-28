@@ -3,6 +3,7 @@ const { mapObj, thrush } = require('tinyfunk')
 const api = require('./api')
 
 const extras = {
+  follow: require('./lib/follow'),
   VersionConflictError: require('./lib/VersionConflictError')
 }
 
