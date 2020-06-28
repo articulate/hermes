@@ -373,3 +373,21 @@ writeMessage({
 ```
 
 If the current stream version doesn't match, then `writeMessage` will reject with a [`VersionConflictError`](/extras?id=versionconflicterror) that you can [catch and retry](/api?id=error-handling).
+
+### Initial Message
+
+Sometimes you'll want to ensure that a particular message is the first in its stream, either to start off a new business process, or to implement the [reservation pattern](/idempotence-patterns).  To do so, set `{ expectedVersion: -1 }`.
+
+?> **Don't forget:** the [version of an empty stream](/core-concepts?id=stream) is `-1`.
+
+This is a common enough pattern than Hermes includes a `writeMessage.initial` function to simplify it for you:
+
+```js
+const { writeMessage } = require('../lib/hermes')
+
+writeMessage.initial({
+  streamVersion: `userId-${email}`,
+  type: 'Linked',
+  data: { userId, email }
+})
+```

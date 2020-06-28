@@ -4,7 +4,7 @@ const uuid = require('uuid')
 
 const { memory: { follow, store, writeMessage } } = require('./lib/hermes')
 
-describe.only('follow', () => {
+describe('follow', () => {
   const Rename = ({ name, userId }) =>
     ({
       streamName: `displayName:command-${userId}`,

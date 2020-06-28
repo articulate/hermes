@@ -90,6 +90,16 @@ const test = hermes => () => {
       }
     })
   })
+
+  describe('writeMessage.initial', () => {
+    beforeEach(() =>
+      writeMessage.initial(valid).then(msg)
+    )
+
+    it('sets the expectedVersion to -1', () => {
+      expect(msg().expectedVersion).to.equal(-1)
+    })
+  })
 }
 
 describe('writeMessage', () => {
