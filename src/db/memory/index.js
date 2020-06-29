@@ -1,5 +1,7 @@
 const { mapObj, merge, pipe, thrush } = require('tinyfunk')
 
+const debug = require('../../lib/debug').extend('db')
+
 const db = {
   getCategoryMessages: require('./getCategoryMessages'),
   getLastStreamMessage: require('./getLastStreamMessage'),
@@ -19,6 +21,7 @@ const dbFactory = () => {
     store.lastMessage = null
     store.messages.length = 0
     store.streams.clear()
+    debug('store cleared')
   }
 
   return pipe(
