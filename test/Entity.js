@@ -3,10 +3,11 @@ const { expect } = require('chai')
 const spy = require('@articulate/spy')
 const uuid = require('uuid')
 
-const { Entity, streamVersion, writeMessage } = require('./lib/hermes')
+const { memory, postgres } = require('./lib/hermes')
 const Viewed = require('./lib/Viewed')
 
-describe('Entity', () => {
+const test = hermes => () => {
+  const { Entity, streamVersion, writeMessage } = hermes
   let Viewing
 
   describe('when category is missing', () => {
@@ -37,6 +38,7 @@ describe('Entity', () => {
     })
 
     it('safely defaults to an empty object of handlers', async () => {
+      /* eslint-disable-next-line no-unused-vars */
       const [ entity, version ] = await Viewing.fetch('anything')
       expect(entity).to.eql({ views: 0 })
     })
@@ -55,11 +57,13 @@ describe('Entity', () => {
     })
 
     it('resolves with the init', async () => {
+      /* eslint-disable-next-line no-unused-vars */
       const [ entity, version ] = await Viewing.fetch('anything')
       expect(entity).to.eql({ views: 0 })
     })
 
     it('also includes a version of -1', async () => {
+      /* eslint-disable-next-line no-unused-vars */
       const [ entity, version ] = await Viewing.fetch('anything')
       expect(version).to.equal(-1)
     })
@@ -87,11 +91,13 @@ describe('Entity', () => {
     })
 
     it('projects over the events to build the entity', async () => {
+      /* eslint-disable-next-line no-unused-vars */
       const [ entity, version ] = await Viewing.fetch(videoId)
       expect(entity).to.eql({ views: 3 })
     })
 
     it('also includes the version of the entity', async () => {
+      /* eslint-disable-next-line no-unused-vars */
       const [ entity, version ] = await Viewing.fetch(videoId)
       expect(version).to.equal(2)
     })
@@ -236,4 +242,9 @@ describe('Entity', () => {
       expect(version).to.equal(0)
     })
   })
+}
+
+describe('Entity', () => {
+  describe('in memory', test(memory))
+  describe('in postgres', test(postgres))
 })

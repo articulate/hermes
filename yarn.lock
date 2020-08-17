@@ -1398,10 +1398,10 @@ through@2, through@^2.3.6:
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
 
-tinyfunk@^1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/tinyfunk/-/tinyfunk-1.7.2.tgz#8253c0f040037d3d277df22475ce2bd66276e18d"
-  integrity sha512-IFHz87e0FPBqX83C+4bqO58WBT8WD8r64GLv2763ouhXWOVK7UqNL6YioJ4lVeb84j1YUdWh5J2E3RFcnle8kQ==
+tinyfunk@^1.7.3:
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/tinyfunk/-/tinyfunk-1.7.3.tgz#0e6b902dc915fb42a24fcca55c2cdc901ea2999c"
+  integrity sha512-Gf591+QxFhw9/0pRxoSsCzo7xtf+a+/A4enVubkRV+AysranHvsyGjXaCYt58Nd7VCCyZN5p7UZMfSDU3J/rPw==
 
 tmp@^0.0.33:
   version "0.0.33"

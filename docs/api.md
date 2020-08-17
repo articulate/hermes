@@ -3,6 +3,7 @@
 Pretty much every system built with Hermes will need to:
 
 - Write messages to the message store with [`writeMessage`](/api?id=writemessage).
+- Implement message workflows with [`follow`](/api?id=follow).
 - Consume messages and handle them with a [`Consumer`](/api?id=consumer).
 - Project events into current state with an [`Entity`](/api?id=entity).
 
@@ -140,10 +141,14 @@ const handlerWithRetries =
 ## Entity
 
 ```haskell
-Entity :: Object -> { fetch: String -> Promise [ a, Number ] }
+Entity :: Object -> { clear, fetch }
 ```
 
 Initializes an entity store with an object of options, and returns a interface with a `fetch` function.  Calling `fetch(id)` on an entity store is the primary means of querying for state in the message store.  The `fetch` function resolves with an `[entity, version]` pair, which are the projected entity and the current version of the stream.
+
+```haskell
+fetch :: String -> Promise [ a, Number ]
+```
 
 ?> **An entity is not the same as a "model" or a "SQL table" in a CRUD system.**  It is instead a reduction of the events in a single stream using a particular projection.  If you have a background in functional programming, you may be familiar with the concept of a reducer: a projection is just a reducer.  Multiple entities may be created from the same events in a stream using different projections, but often you will only need one per component.
 
@@ -207,6 +212,27 @@ To avoid projecting over every event in a stream every time, fetched entities wi
 
 Caching is enabled by default with a max size of 1000 cached entities, but can be disabled or configured as desired.
 
+?> If you've enabled [mocking](/?id=mocking) to help test your [autonomous services](/core-concepts?id=service), then you may be clearing the store after each test.  With entity caching enabled as well, your entities may behave unexpectedly.  If so, you've run afowl of [one of the two hardest things in programming](https://www.martinfowler.com/bliki/TwoHardThings.html).  Avoid it by using the entity store's `clear` function to bust the cache.
+
+```js
+const hermes = require('@articulate/hermes')({
+  mock: process.env.NODE_ENV === 'test'
+})
+
+const UserActivation =
+  Entity({
+    name: 'UserActivation',
+    category: 'userActivation',
+    init,
+    handlers: { Activated, Deactivated }
+  })
+
+afterEach(() => {
+  hermes.store.clear()
+  UserActivation.clear()
+})
+```
+
 ### Snapshots
 
 Entities are also periodically persistent to a durable cache in a process called snapshotting.  Snapshots are persisted as `Recorded` events on a stream of the form:
@@ -216,6 +242,77 @@ Entities are also periodically persistent to a durable cache in a process called
 ```
 
 If caching is disabled or an entity is not found in the cache, a snapshot will be loaded before projecting over newer events.  Snapshots are enabled by default with an interval of 100 messages, but can be disabled or configured as desired.
+
+## follow
+
+```haskell
+follow :: Message -> Message -> Message
+```
+
+Accepts a `prev` message and a `next` message, and returns a copy of `next` with [metadata](/core-concepts?id=message) included to track causation and correlation.
+
+?> **Use `follow` to implement message workflows.**  When messages represent subsequent steps in a workflow, a subsequent message's metadata records elements of the preceding message's metadata. Each message in a workflow carries provenance data of the message that precedes it.
+
+### Examples
+
+```js
+const Account = require('../entities/Account')
+const { follow, writeMessage } = require('../lib/hermes')
+const Opened = require('../events/Opened')
+
+const handleOpen = async open => {
+  const [ account, version ] = await Account.fetch(open.data.accountId)
+
+  if (account.opened)
+    return console.info('already opened, ignoring command: %o', open.id)
+
+  let opened = Opened(open.data)
+  opened = follow(open, opened)
+  opened.expectedVersion = version
+  await writeMessage(opened)
+}
+```
+
+Note that `follow` is curried, so you can compose it like this if you prefer:
+
+```js
+const { assoc, pipe, prop } = require('tinyfunk')
+
+const Account = require('../entities/Account')
+const { follow, writeMessage } = require('../lib/hermes')
+const Opened = require('../events/Opened')
+
+const handleOpen = async open => {
+  const [ account, version ] = await Account.fetch(open.data.accountId)
+
+  if (account.opened)
+    return console.info('already opened, ignoring command: %o', open.id)
+
+  return pipe(
+    prop('data'),
+    Opened,
+    follow(open),
+    assoc('expectedVersion', version),
+    writeMessage
+  )(open)
+}
+```
+
+!> **Notice:** In Hermes, `follow` does not copy `data` attributes, unlike the [Eventide implementation](http://docs.eventide-project.org/user-guide/messages-and-message-data/messages.html#message-workflows).
+
+### Metadata Transfer
+
+Provenance metadata is transfered to the subsequent message similar to below:
+
+```js
+next.metadata.causationMessageGlobalPosition = prev.globalPosition
+next.metadata.causationMessagePosition = prev.position
+next.metadata.causationMessageStreamName = prev.streamName
+next.metadata.correlationStreamName = prev.metadata.correlationStreamName
+next.metadata.replyStreamName = prev.metadata.replyStreamName
+```
+
+?>  This is intentionally compatible with the format of [provenance metadata in Eventide](http://docs.eventide-project.org/user-guide/messages-and-message-data/metadata.html#message-workflows).
 
 ## writeMessage
 
@@ -276,3 +373,21 @@ writeMessage({
 ```
 
 If the current stream version doesn't match, then `writeMessage` will reject with a [`VersionConflictError`](/extras?id=versionconflicterror) that you can [catch and retry](/api?id=error-handling).
+
+### Initial Message
+
+Sometimes you'll want to ensure that a particular message is the first in its stream, either to start off a new business process, or to implement the [reservation pattern](/idempotence-patterns).  To do so, set `{ expectedVersion: -1 }`.
+
+?> **Don't forget:** the [version of an empty stream](/core-concepts?id=stream) is `-1`.
+
+This is a common enough pattern than Hermes includes a `writeMessage.initial` function to simplify it for you:
+
+```js
+const { writeMessage } = require('../lib/hermes')
+
+writeMessage.initial({
+  streamVersion: `userId-${email}`,
+  type: 'Linked',
+  data: { userId, email }
+})
+```

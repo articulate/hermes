@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "docs": "docsify serve -p 4000 ./docs",
-    "lint": "eslint src",
+    "lint": "eslint src test",
     "test": "mocha"
   },
   "dependencies": {
@@ -16,7 +16,7 @@
     "highland": "^2.13.5",
     "mnemonist": "^0.32.0",
     "pg": "^7.18.2",
-    "tinyfunk": "^1.7.2",
+    "tinyfunk": "^1.7.3",
     "uuid": "^7.0.2"
   },
   "devDependencies": {

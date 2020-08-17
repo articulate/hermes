@@ -28,6 +28,7 @@ const Consumer = db => opts => {
   const streamName = `${category}+position-${name}${suffix}`
 
   let count
+  let nextTick
   let pending
   let position
   let up = false
@@ -100,6 +101,7 @@ const Consumer = db => opts => {
   const stop = err => {
     if (up) {
       debug(`stopping${err ? ' on error' : ''}`)
+      clearTimeout(nextTick)
       up = false
     }
 
@@ -115,11 +117,12 @@ const Consumer = db => opts => {
   }
 
   const tick = () => {
-    setTimeout(poll, tickInterval)
+    nextTick = setTimeout(poll, tickInterval)
   }
 
   const updatePosition = msg => {
     position = msg.globalPosition + 1
+    debug('new position: %o', position)
     count++
 
     if (count >= positionUpdateInterval) {

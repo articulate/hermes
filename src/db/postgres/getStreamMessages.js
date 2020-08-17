@@ -1,8 +1,8 @@
 const _ = require('highland')
 const { tap } = require('tinyfunk')
 
-const debug = require('../lib/debug').extend('db')
-const parseMessage = require('../lib/parseMessage')
+const debug = require('../../lib/debug').extend('db')
+const parseMessage = require('../../lib/parseMessage')
 
 const sql = 'SELECT * FROM message_store.get_stream_messages($1, $2, $3, $4)'
 

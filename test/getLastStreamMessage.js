@@ -1,10 +1,11 @@
 const { assoc } = require('tinyfunk')
 const { expect } = require('chai')
 
-const { getLastStreamMessage, writeMessage } = require('./lib/hermes')
+const { memory, postgres } = require('./lib/hermes')
 const Signup = require('./lib/Signup')
 
-describe('getLastStreamMessage', () => {
+const test = hermes => () => {
+  const { getLastStreamMessage, writeMessage } = hermes
   let command, message
 
   describe('when stream is empty', () => {
@@ -29,4 +30,9 @@ describe('getLastStreamMessage', () => {
       expect(message).to.deep.include(command)
     })
   })
+}
+
+describe('getLastStreamMessage', () => {
+  describe('in memory', test(memory))
+  describe('in postgres', test(postgres))
 })

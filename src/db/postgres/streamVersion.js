@@ -1,6 +1,6 @@
 const { compose, defaultTo, path } = require('tinyfunk')
 
-const debug = require('../lib/debug').extend('db')
+const debug = require('../../lib/debug').extend('db')
 
 const sql = 'SELECT * FROM message_store.stream_version($1)'
 

@@ -1,9 +1,10 @@
 const { expect } = require('chai')
 
+const { memory, postgres } = require('./lib/hermes')
 const Signup = require('./lib/Signup')
-const { streamVersion, writeMessage } = require('./lib/hermes')
 
-describe('streamVersion', () => {
+const test = hermes => () => {
+  const { streamVersion, writeMessage } = hermes
   let command, version
 
   describe('when stream is empty', () => {
@@ -28,4 +29,9 @@ describe('streamVersion', () => {
       expect(version).to.equal(1)
     })
   })
+}
+
+describe('streamVersion', () => {
+  describe('in memory', test(memory))
+  describe('in postgres', test(postgres))
 })
