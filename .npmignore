@@ -1,0 +1,15 @@
+*.log
+*.md
+.dockerignore
+.DS_Store
+.eslintrc.js
+.gitignore
+.jshint*
+.travis.yml
+/.nyc_output
+/docs
+/node_modules
+/test
+docker-compose.*
+Dockerfile
+yarn.lock
