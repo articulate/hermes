@@ -158,7 +158,7 @@ The events in the message store are the source of truth in an event-sourced syst
 
 | Option             | Type      | Default | Description                                                             |
 |:-------------------|:----------|:--------|:------------------------------------------------------------------------|
-| `cacheEnabled`     | `Boolean` | `true`  | Flag to enable im-memory LRU-cache                                      |
+| `cacheEnabled`     | `Boolean` | `true`  | Flag to enable in-memory LRU-cache                                      |
 | `cacheLimit`       | `Number`  | `1000`  | Max size of in-memory LRU-cache                                         |
 | `category`         | `String`  |         | Name of the category to read                                            |
 | `handlers`         | `Object`  | `{}`    | Map of event types to reducers                                          |
