@@ -386,7 +386,7 @@ This is a common enough pattern than Hermes includes a `writeMessage.initial` fu
 const { writeMessage } = require('../lib/hermes')
 
 writeMessage.initial({
-  streamVersion: `userId-${email}`,
+  streamName: `userId-${email}`,
   type: 'Linked',
   data: { userId, email }
 })
